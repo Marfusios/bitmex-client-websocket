@@ -4,7 +4,6 @@ using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 using Bitmex.Client.Websocket.Responses.Orders;
-using Bitmex.Client.Websocket.Responses.Tickers;
 using Bitmex.Client.Websocket.Responses.Trades;
 using Bitmex.Client.Websocket.Responses.Wallets;
 
@@ -18,16 +17,11 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<SubscribeResponse> SubscribeSubject = new Subject<SubscribeResponse>();
         internal readonly Subject<AuthenticationResponse> AuthenticationSubject = new Subject<AuthenticationResponse>();
 
-        internal readonly Subject<Ticker> TickerSubject = new Subject<Ticker>();
         internal readonly Subject<TradeResponse> TradesSubject = new Subject<TradeResponse>();
         internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
 
-        internal readonly Subject<Wallet[]> WalletsSubject = new Subject<Wallet[]>();
-        internal readonly Subject<Wallet> WalletSubject = new Subject<Wallet>();
-        internal readonly Subject<Order[]> OrdersSubject = new Subject<Order[]>();
-        internal readonly Subject<Order> OrderCreatedSubject = new Subject<Order>();
-        internal readonly Subject<Order> OrderUpdatedSubject = new Subject<Order>();
-        internal readonly Subject<Order> OrderCanceledSubject = new Subject<Order>();
+        internal readonly Subject<WalletResponse> WalletSubject = new Subject<WalletResponse>();
+        internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
 
 
 
@@ -37,28 +31,18 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<SubscribeResponse> SubscribeStream => SubscribeSubject.AsObservable();
         public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
 
-        public IObservable<Ticker> TickerStream => TickerSubject.AsObservable();
         public IObservable<TradeResponse> TradesStream => TradesSubject.AsObservable();
         public IObservable<BookResponse> BookStream => BookSubject.AsObservable();
 
         /// <summary>
-        /// Initial info about all wallets/balances (streamed only on authentication)
+        /// Stream for every wallet balance update
         /// </summary>
-        public IObservable<Wallet[]> WalletsStream => WalletsSubject.AsObservable();
-
-        /// <summary>
-        /// Stream for every wallet balance update (initial wallets info is also streamed, same as 'WalletsStream')
-        /// </summary>
-        public IObservable<Wallet> WalletStream => WalletSubject.AsObservable();
+        public IObservable<WalletResponse> WalletStream => WalletSubject.AsObservable();
 
 
         /// <summary>
-        /// Initial info about all opened orders (streamed only on authentication)
+        /// Stream of all active orders
         /// </summary>
-        public IObservable<Order[]> OrdersStream => OrdersSubject.AsObservable();
-
-        public IObservable<Order> OrderCreatedStream => OrderCreatedSubject.AsObservable();
-        public IObservable<Order> OrderUpdatedStream => OrderUpdatedSubject.AsObservable();
-        public IObservable<Order> OrderCanceledStream => OrderCanceledSubject.AsObservable();
+        public IObservable<OrderResponse> OrderStream => OrderSubject.AsObservable();
     }
 }

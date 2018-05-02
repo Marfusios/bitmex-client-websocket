@@ -12,6 +12,11 @@ namespace Bitmex.Client.Websocket.Utils
             return (long)substracted.TotalMilliseconds;
         }
 
+        public static long NowTicks()
+        {
+            return DateTime.UtcNow.Ticks - UnixBase.Ticks;
+        }
+
         public static DateTime ConvertToTime(long timeInMs)
         {
             return UnixBase.AddMilliseconds(timeInMs);

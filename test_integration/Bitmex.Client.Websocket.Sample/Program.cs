@@ -17,8 +17,8 @@ namespace Bitmex.Client.Websocket.Sample
     {
         private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
 
-        private static readonly string API_KEY = "";
-        private static readonly string API_SECRET = "";
+        private static readonly string API_KEY = "3th1G0VkjitH_qn6toZdGybm";
+        private static readonly string API_SECRET = "wT0LDvYkCp2hjVbkCK-q35oHS2CO7etz7OVi7-D757DXEmp2";
 
         static void Main(string[] args)
         {
@@ -44,17 +44,46 @@ namespace Bitmex.Client.Websocket.Sample
                 using (var client = new BitmexWebsocketClient(communicator))
                 {
 
-                    client.Streams.InfoStream.Subscribe(info =>      
-                        Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}"));
+                    client.Streams.InfoStream.Subscribe(info =>
+                    {
+                        Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
+
+                            
+                        //client.Send(new PingRequest());
+                        //client.Send(new BookSubscribeRequest());
+                        //client.Send(new TradesSubscribeRequest("XBTUSD"));
+                        client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+                    });   
 
                     client.Streams.ErrorStream.Subscribe(x =>
                         Log.Warning($"Error received, message: {x.Error}, status: {x.Status}"));
+
+                    client.Streams.AuthenticationStream.Subscribe(x =>
+                    {
+                        Log.Information($"Authentication happened, success: {x.Success}");
+                        client.Send(new WalletSubscribeRequest());
+                        client.Send(new OrderSubscribeRequest());
+                    });
+
 
                     client.Streams.SubscribeStream.Subscribe(x =>
                         Log.Information($"Subscribed ({x.Success}) to {x.Subscribe}"));
 
                     client.Streams.PongStream.Subscribe(x =>
                         Log.Information($"Pong received ({x.Message})"));
+
+
+                    client.Streams.WalletStream.Subscribe(y =>
+                        y.Data.ToList().ForEach(x => 
+                            Log.Information($"Wallet {x.Account}, {x.Currency} amount: {x.Balance}"))
+                    );
+
+                    client.Streams.OrderStream.Subscribe(y =>
+                        y.Data.ToList().ForEach(x =>
+                            Log.Information(
+                                $"Order {x.Symbol} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.OrderQty}, " +
+                                $"Price: {x.Price}, Direction: {x.Side}, Working: {x.WorkingIndicator}"))
+                    );
 
                     client.Streams.TradesStream.Subscribe(y =>
                        y.Data.ToList().ForEach(x => 
@@ -68,13 +97,7 @@ namespace Bitmex.Client.Websocket.Sample
                         );
 
                     communicator.Start().Wait();
-
-                    Task.Delay(1000).Wait();
-
-                    client.Send(new PingRequest());
-                    //client.Send(new BookSubscribeRequest());
-                    client.Send(new TradesSubscribeRequest("XBTUSD"));
-
+                    
                     ExitEvent.WaitOne();
                 }
             }
@@ -92,7 +115,7 @@ namespace Bitmex.Client.Websocket.Sample
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.ColoredConsole(LogEventLevel.Verbose)
+                .WriteTo.ColoredConsole(LogEventLevel.Information)
                 .CreateLogger();
         }
 

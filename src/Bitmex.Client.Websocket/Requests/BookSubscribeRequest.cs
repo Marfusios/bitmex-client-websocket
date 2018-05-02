@@ -23,9 +23,7 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
-        public override string Topic => string.IsNullOrWhiteSpace(Symbol) ? "orderBookL2" : $"orderBookL2:{Symbol}";
-
-        [JsonIgnore]
-        public string Symbol { get; }       
+        public override string Topic => "orderBookL2";
+        public override string Symbol { get; }       
     }
 }

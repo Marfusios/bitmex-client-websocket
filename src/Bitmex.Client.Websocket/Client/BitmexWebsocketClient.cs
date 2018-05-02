@@ -4,7 +4,9 @@ using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
+using Bitmex.Client.Websocket.Responses.Orders;
 using Bitmex.Client.Websocket.Responses.Trades;
+using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
 using Bitmex.Client.Websocket.Websockets;
 using Newtonsoft.Json.Linq;
@@ -70,7 +72,7 @@ namespace Bitmex.Client.Websocket.Client
                 if (handled)
                     return;
 
-                Log.Warning(L($"Unhandled response: '{messageSafe}'"));
+                Log.Warning(L($"Unhandled response:  '{messageSafe}'"));
             }
             catch (Exception e)
             {
@@ -97,12 +99,17 @@ namespace Bitmex.Client.Websocket.Client
             // ********************
 
             return
-                ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
-                InfoResponse.TryHandle(response, Streams.InfoSubject) ||
-                SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
 
                 TradeResponse.TryHandle(response, Streams.TradesSubject) ||
-                BookResponse.TryHandle(response, Streams.BookSubject);
+                BookResponse.TryHandle(response, Streams.BookSubject) ||
+                OrderResponse.TryHandle(response, Streams.OrderSubject) ||
+                WalletResponse.TryHandle(response, Streams.WalletSubject) ||
+
+
+                ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
+                SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
+                InfoResponse.TryHandle(response, Streams.InfoSubject) ||
+                AuthenticationResponse.TryHandle(response, Streams.AuthenticationSubject);
         }
     }
 }

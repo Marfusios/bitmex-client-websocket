@@ -1,34 +1,53 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using System;
+using System.Diagnostics;
 
 namespace Bitmex.Client.Websocket.Responses.Orders
 {
-    [DebuggerDisplay("Order: {Id}/{Cid} - {Symbol} - {Amount}")]
-    [JsonConverter(typeof(OrderConverter))]
+    [DebuggerDisplay("Order: {Symbol}, {OrderQty}. {Price}")]
     public class Order
     {
-        public long Id { get; set; }
-        public long? Gid { get; set; }
-        public long Cid { get; set; }
-        public string Symbol { get; set; }
-        public long? MtsCreate { get; set; }
-        public long? MtsUpdate { get; set; }
-        public double? Amount { get; set; }
-        public double? AmountOrig { get; set; }
-        public OrderType Type { get; set; }
-        public OrderType TypePrev { get; set; }
-        public int? Flags { get; set; }
-        public OrderStatus OrderStatus { get; set; }
-        public double? Price { get; set; }
-        public double? PriceAvg { get; set; }
-        public double? PriceTrailing { get; set; }
-        public double? PriceAuxLimit { get; set; }
-        public int? Notify { get; set; }
-        public int? Hidden { get; set; }
-        public int? PlacedId { get; set; }
+        public string OrderId { get; set; }
+        public string ClOrdId { get; set; }
+        public string ClOrdLinkId {get; set; }
 
-        public string Pair => !string.IsNullOrWhiteSpace(Symbol) && Symbol.Length > 6 ? Symbol.Remove(0, 1) : string.Empty;
-        public string PrimarySymbol => !string.IsNullOrWhiteSpace(Pair) && Pair.Length > 5 ? Pair.Substring(0, 3) : string.Empty;
-        public string SecondarySymbol => !string.IsNullOrWhiteSpace(Pair) && Pair.Length > 5 ? Pair.Substring(3, 3) : string.Empty;
+        public long? Account { get; set; }
+        public string Symbol { get; set; }
+        public BitmexSide Side { get; set; }
+
+        public double? SimpleOrderQty { get; set; }
+        public long? OrderQty {get; set; }
+
+        public double? Price { get; set; }
+
+        public long? DisplayQty { get; set; }
+        public double? StopPx { get; set; }
+
+        public double? PegOffsetValue { get; set; }
+        public string PegPriceType { get; set; }
+
+        public string Currency { get; set; }
+        public string SettlCurrency { get; set; }
+
+        public string OrdType { get; set; }
+        public string TimeInForce { get; set; }
+        public string ExecInst { get; set; }
+        public string ContingencyType { get; set; }
+        public string ExDestination { get; set; }
+        public string OrdStatus { get; set; }
+        public string Triggered { get; set; }
+
+        public bool? WorkingIndicator { get; set; }
+        public string OrdRejReason { get; set; }
+        public double? SimpleLeavesQty { get; set; }
+        public long? LeavesQty { get; set; }
+        public double? SimpleCumQty { get; set; }
+        public long? CumQty { get; set; }
+        public double? AvgPx { get; set; }
+        public string MultiLegReportingType { get; set; }
+        public string Text {get; set; }
+
+        public DateTime TransactTime { get; set; }
+        public DateTime Timestamp { get; set; }
+
     }
 }

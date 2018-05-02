@@ -1,5 +1,4 @@
 ﻿using Bitmex.Client.Websocket.Validations;
-using Newtonsoft.Json;
 
 namespace Bitmex.Client.Websocket.Requests
 {
@@ -23,9 +22,7 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
-        public override string Topic => string.IsNullOrWhiteSpace(Symbol) ? "trade" : $"trade:{Symbol}";
-
-        [JsonIgnore]
-        public string Symbol { get; }
+        public override string Topic => "trade";
+        public override string Symbol { get; }
     }
 }

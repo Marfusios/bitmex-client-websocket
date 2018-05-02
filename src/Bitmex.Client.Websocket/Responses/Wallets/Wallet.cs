@@ -1,16 +1,32 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using System;
+using System.Diagnostics;
+using Bitmex.Client.Websocket.Utils;
 
 namespace Bitmex.Client.Websocket.Responses.Wallets
 {
     [DebuggerDisplay("Wallet: {Currency} - {Balance}")]
-    [JsonConverter(typeof(WalletConverter))]
     public class Wallet
     {
-        public WalletType Type { get; set; }
+        public long Account { get; set; }
         public string Currency { get; set; }
-        public double Balance { get; set; }
-        public double UnsettledInterest { get; set; }
-        public double? BalanceAvailable { get; set; }
+
+        public long? PrevDeposited { get; set; }
+        public long? PrevWithdrawn { get; set; }
+        public long? PrevTransferIn { get; set; }
+        public long? PrevTransferOut { get; set; }
+        public long? PrevAmount { get; set; }
+        public long? TransferIn { get; set; }
+        public long? TransferOut { get; set; }
+        public long? Amount { get; set; }
+        public long? PendingCredit { get; set; }
+        public long? PendingDebit { get; set; }
+        public long? ConfirmedDebit { get; set; }
+
+        public DateTime Timestamp { get; set; }
+        public string Addr { get; set; }
+        public string Script { get; set; }
+        public string[] WithdrawalLock {get; set; }
+
+        public double Balance => BitmexConverter.ConvertToBtc(Currency, Amount ?? 0);
     }
 }

@@ -25,14 +25,19 @@ using (var communicator = new BitmexWebsocketCommunicator(url))
 {
     using (var client = new BitmexWebsocketClient(communicator))
     {
+        client.Streams.InfoStream.Subscribe(info =>
+        {
+            Console.WriteLine($"Info received, reconnection happened.")
+            client.Send(new PingRequest()).Wait();
+        });
+
         client.Streams.PongStream.Subscribe(pong =>
         {
-            Console.WriteLine($"Pong received! Id: {pong.Cid}") // Pong received! Id: 123456
+            Console.WriteLine($"Pong received!")
             exitEvent.Set();
         });
 
         await communicator.Start();
-        await client.Send(new PingRequest() {Cid = 123456});
 
         exitEvent.WaitOne(TimeSpan.FromSeconds(30));
     }
@@ -78,12 +83,12 @@ More usage examples:
 |------------------------|:--------------:|
 | Affilate               |                |
 | Execution              |                |
-| Order                  |                |
+| Order                  |  ✔            |
 | Margin                 |                |
 | Position               |                |
 | Private notifications  |                |
 | Transact               |                |
-| Wallet                 |                |
+| Wallet                 |  ✔            |
 
 **Pull Requests are welcome!**
 

@@ -34,13 +34,11 @@ namespace Bitmex.Client.Websocket.Tests.Integration
 
                     await communicator.Start();
 
-                    await client.Send(new PingRequest() {Cid = 123456});
+                    await client.Send(new PingRequest());
 
                     receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
                     Assert.NotNull(received);
-                    Assert.Equal(123456, received.Cid);
-                    Assert.True(DateTime.UtcNow.Subtract(received.Ts).TotalSeconds < 15);
                 }
             }
         }
@@ -72,7 +70,7 @@ namespace Bitmex.Client.Websocket.Tests.Integration
                     receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
                     Assert.NotNull(received);
-                    Assert.True(received.IsAuthenticated);
+                    Assert.True(received.Success);
                 }
             }
         }

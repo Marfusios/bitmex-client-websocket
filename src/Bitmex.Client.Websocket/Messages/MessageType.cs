@@ -4,7 +4,7 @@
     {
         // Do not rename, used in requests
         Ping,
-        Auth,
+        AuthKey,
         Subscribe,
         Unsubscribe,
         CancelAllAfter,
@@ -14,5 +14,7 @@
         Info,
         Trade,
         OrderBook,
+        Wallet,
+        Order
     }
 }

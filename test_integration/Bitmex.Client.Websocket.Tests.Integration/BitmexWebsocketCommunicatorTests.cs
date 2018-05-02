@@ -28,7 +28,6 @@ namespace Bitmex.Client.Websocket.Tests.Integration
                 receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.NotNull(received);
-                Assert.Equal("{\"event\":\"info\",\"version\":2}", received);
             }
         }
     }

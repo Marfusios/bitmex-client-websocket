@@ -6,27 +6,31 @@ namespace Bitmex.Client.Websocket.Requests
 {
     public class AuthenticationRequest : RequestBase
     {
+        private readonly string _apiKey;
+        private readonly string _authSig;
+        private readonly long _authNonce;
+        private readonly string _authPayload;
+
         public AuthenticationRequest(string apiKey, string apiSecret)
         {
             BmxValidations.ValidateInput(apiKey, nameof(apiKey));
             BmxValidations.ValidateInput(apiSecret, nameof(apiSecret));
 
-            ApiKey = apiKey;
+            _apiKey = apiKey;
 
-            AuthNonce = BitmexAuthentication.CreateAuthNonce();
-            AuthPayload = BitmexAuthentication.CreateAuthPayload(AuthNonce);
+            _authNonce = BitmexAuthentication.CreateAuthNonce();
+            _authPayload = BitmexAuthentication.CreateAuthPayload(_authNonce);
 
-            AuthSig = BitmexAuthentication.CreateSignature(AuthPayload, apiSecret);
+            _authSig = BitmexAuthentication.CreateSignature(apiSecret, _authPayload);
         }
 
-        public override MessageType Operation => MessageType.Auth;
+        public override MessageType Operation => MessageType.AuthKey;
 
-        public string ApiKey { get; }
-        public string AuthSig { get; }
-        public long AuthNonce { get; }
-        public string AuthPayload { get; }
-
-
-        
+        public object[] Args => new object[]
+        {
+            _apiKey,
+            _authNonce,
+            _authSig
+        };
     }
 }

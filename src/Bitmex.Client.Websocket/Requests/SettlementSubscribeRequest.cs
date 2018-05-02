@@ -1,10 +1,20 @@
 ﻿using Bitmex.Client.Websocket.Validations;
-using Newtonsoft.Json;
 
 namespace Bitmex.Client.Websocket.Requests
 {
     public class SettlementSubscribeRequest : SubscribeRequestBase
     {
+        /// <summary>
+        /// Subscribe to all settlements
+        /// </summary>
+        public SettlementSubscribeRequest()
+        {
+            Symbol = string.Empty;
+        }
+
+        /// <summary>
+        /// Subscribe to settlements for selected pair ('XBTUSD', etc)
+        /// </summary>
         public SettlementSubscribeRequest(string pair)
         {
             BmxValidations.ValidateInput(pair, nameof(pair));
@@ -12,9 +22,7 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
-        public override string Topic => $"settlement:{Symbol}";
-
-        [JsonIgnore]
-        public string Symbol { get; }
+        public override string Topic => "settlement";
+        public override string Symbol { get; }
     }
 }
