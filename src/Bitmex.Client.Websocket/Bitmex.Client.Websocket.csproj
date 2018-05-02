@@ -12,7 +12,7 @@
     <PackageTags>Bitmex websockets websocket client cryptocurrency exchange bitcoin</PackageTags>
     <PackageLicenseUrl>https://github.com/Marfusios/bitmex-client-websocket/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Marfusios/bitmex-client-websocket</PackageProjectUrl>
-    <PackageIconUrl>https://static.bitmex.com/assets/img/bitmex-logo-alt-white.png</PackageIconUrl>
+    <PackageIconUrl>https://static.bitmex.com/assets/img/bitmex-logo-alt.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Marfusios/bitmex-client-websocket</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

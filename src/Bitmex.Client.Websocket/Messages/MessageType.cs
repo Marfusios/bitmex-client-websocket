@@ -2,9 +2,15 @@
 {
     public enum MessageType
     {
+        // Do not rename, used in requests
         Ping,
         Auth,
         Subscribe,
+        Unsubscribe,
+        CancelAllAfter,
+
+        // Can be renamed, only for responses
+        Error,
         Info,
         Trade,
         OrderBook,

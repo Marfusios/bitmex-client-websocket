@@ -15,7 +15,9 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<ErrorResponse> ErrorSubject = new Subject<ErrorResponse>();
         internal readonly Subject<InfoResponse> InfoSubject = new Subject<InfoResponse>();
         internal readonly Subject<PongResponse> PongSubject = new Subject<PongResponse>();
+        internal readonly Subject<SubscribeResponse> SubscribeSubject = new Subject<SubscribeResponse>();
         internal readonly Subject<AuthenticationResponse> AuthenticationSubject = new Subject<AuthenticationResponse>();
+
         internal readonly Subject<Ticker> TickerSubject = new Subject<Ticker>();
         internal readonly Subject<TradeResponse> TradesSubject = new Subject<TradeResponse>();
         internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
@@ -32,7 +34,9 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<ErrorResponse> ErrorStream => ErrorSubject.AsObservable();
         public IObservable<InfoResponse> InfoStream => InfoSubject.AsObservable();
         public IObservable<PongResponse> PongStream => PongSubject.AsObservable();
+        public IObservable<SubscribeResponse> SubscribeStream => SubscribeSubject.AsObservable();
         public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
+
         public IObservable<Ticker> TickerStream => TickerSubject.AsObservable();
         public IObservable<TradeResponse> TradesStream => TradesSubject.AsObservable();
         public IObservable<BookResponse> BookStream => BookSubject.AsObservable();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
+using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Client;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Websockets;
@@ -43,9 +44,22 @@ namespace Bitmex.Client.Websocket.Sample
                 using (var client = new BitmexWebsocketClient(communicator))
                 {
 
+                    client.Streams.InfoStream.Subscribe(info =>      
+                        Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}"));
+
+                    client.Streams.ErrorStream.Subscribe(x =>
+                        Log.Warning($"Error received, message: {x.Error}, status: {x.Status}"));
+
+                    client.Streams.SubscribeStream.Subscribe(x =>
+                        Log.Information($"Subscribed ({x.Success}) to {x.Subscribe}"));
+
+                    client.Streams.PongStream.Subscribe(x =>
+                        Log.Information($"Pong received ({x.Message})"));
+
                     client.Streams.TradesStream.Subscribe(y =>
                        y.Data.ToList().ForEach(x => 
-                           Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Amount: {x.Size}, Price: {x.Price}, Direction: {x.TickDirection}"))
+                           Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Amount: {x.Size}, " +
+                                           $"Price: {x.Price}, Direction: {x.TickDirection}"))
                         );
 
                     client.Streams.BookStream.Subscribe(book =>
@@ -53,15 +67,13 @@ namespace Bitmex.Client.Websocket.Sample
                             $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
                         );
 
-                    client.Streams.InfoStream.Subscribe(info =>
-                    {
-                        Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
-                    });
-
                     communicator.Start().Wait();
 
-                    client.Send(new BookSubscribeRequest());
-                    //client.Send(new TradesSubscribeRequest());
+                    Task.Delay(1000).Wait();
+
+                    client.Send(new PingRequest());
+                    //client.Send(new BookSubscribeRequest());
+                    client.Send(new TradesSubscribeRequest("XBTUSD"));
 
                     ExitEvent.WaitOne();
                 }
@@ -80,7 +92,7 @@ namespace Bitmex.Client.Websocket.Sample
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.ColoredConsole(LogEventLevel.Information)
+                .WriteTo.ColoredConsole(LogEventLevel.Verbose)
                 .CreateLogger();
         }
 

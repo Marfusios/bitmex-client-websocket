@@ -13,5 +13,11 @@ namespace Bitmex.Client.Websocket.Requests
 
         [JsonIgnore]
         public abstract MessageType Operation { get; }
+
+        [JsonIgnore]
+        public virtual string OperationString => Operation.ToString().ToLower();
+
+        [JsonIgnore] 
+        public virtual bool IsRaw { get; } = false;
     }
 }

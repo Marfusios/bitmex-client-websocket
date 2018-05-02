@@ -1,15 +1,25 @@
-﻿using System;
-using Bitmex.Client.Websocket.Json;
+﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json;
 
 namespace Bitmex.Client.Websocket.Responses
 {
     public class PongResponse : MessageBase
     {
-        public int Cid { get; set; }
+        public override MessageType Op => MessageType.Ping;
 
-        [JsonConverter(typeof(UnixDateTimeConverter))]
-        public DateTime Ts { get; set; }
+        public string Message { get; set; }
+
+        internal static bool TryHandle(string response, ISubject<PongResponse> subject)
+        {
+            if (response == null)
+                return false;
+
+            if (!response.ToLower().Contains("pong"))
+                return false;
+
+            var parsed = new PongResponse {Message = response};
+            subject.OnNext(parsed);
+            return true;
+        }
     }
 }

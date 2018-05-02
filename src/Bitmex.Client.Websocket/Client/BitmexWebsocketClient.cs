@@ -32,11 +32,13 @@ namespace Bitmex.Client.Websocket.Client
             _messageReceivedSubsciption?.Dispose();
         }
 
-        public Task Send<T>(T request)
+        public Task Send<T>(T request) where T: RequestBase
         {
             BmxValidations.ValidateInput(request, nameof(request));
 
-            var serialized = BitmexJsonSerializer.Serialize(request);
+            var serialized = request.IsRaw ? 
+                request.OperationString :
+                BitmexJsonSerializer.Serialize(request);
             return _communicator.Send(serialized);
         }
 
@@ -54,15 +56,21 @@ namespace Bitmex.Client.Websocket.Client
         {
             try
             {
-                var formatted = (message ?? string.Empty).Trim();
+                bool handled;
+                var messageSafe = (message ?? string.Empty).Trim();
 
-                if (formatted.StartsWith("{"))
+                if (messageSafe.StartsWith("{"))
                 {
-                    OnObjectMessage(formatted);
-                    return;
+                    handled = HandleObjectMessage(messageSafe);
+                    if (handled)
+                        return;
                 }
 
-                Log.Warning(L($"Unhandled response: '{formatted}'"));
+                handled = HandleRawMessage(messageSafe);
+                if (handled)
+                    return;
+
+                Log.Warning(L($"Unhandled response: '{messageSafe}'"));
             }
             catch (Exception e)
             {
@@ -70,17 +78,31 @@ namespace Bitmex.Client.Websocket.Client
             }
         }
 
-        private void OnObjectMessage(string msg)
+        private bool HandleRawMessage(string msg)
         {
-            var parsed = BitmexJsonSerializer.Deserialize<JObject>(msg);
-
             // ********************
-            // ADD HANDLERS BELOW
+            // ADD RAW HANDLERS BELOW
             // ********************
 
-            InfoResponse.TryHandle(parsed, Streams.InfoSubject);
-            TradeResponse.TryHandle(parsed, Streams.TradesSubject);
-            BookResponse.TryHandle(parsed, Streams.BookSubject);
+            return
+                PongResponse.TryHandle(msg, Streams.PongSubject);
+        }
+
+        private bool HandleObjectMessage(string msg)
+        {
+            var response = BitmexJsonSerializer.Deserialize<JObject>(msg);
+
+            // ********************
+            // ADD OBJECT HANDLERS BELOW
+            // ********************
+
+            return
+                ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
+                InfoResponse.TryHandle(response, Streams.InfoSubject) ||
+                SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
+
+                TradeResponse.TryHandle(response, Streams.TradesSubject) ||
+                BookResponse.TryHandle(response, Streams.BookSubject);
         }
     }
 }

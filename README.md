@@ -48,22 +48,42 @@ More usage examples:
 | PUBLIC                 |    Covered     |  
 |------------------------|:--------------:|
 | Info                   |  ✔            |
-| Ping-Pong              |               |
-| Errors                 |               |
-| Ticker                 |               |
-| Trades                 |  ✔            |
-| Books                  |  ✔            |
+| Ping-Pong              |  ✔            |
+| Errors                 |  ✔            |
+| Subscribe              |  ✔            |
+| Unsubscribe            |                |
+| Announcement           |                |
+| Chat                   |                |
+| Connected              |                |
+| Funding                |                |
+| Instrument             |                |
+| Insurance              |                |
+| Liquidation            |                |
+| Orderbook L2           |  ✔            |
+| Orderbook L10          |                |
+| Public notifications   |                |
+| Quote                  |                |
+| Quote bin 1m           |                |
+| Quote bin 5m           |                |
+| Quote bin 1h           |                |
+| Quote bin 1d           |                |
+| Settlement             |                |
+| Trade                  |  ✔            |
+| Trade bin 1m           |                |
+| Trade bin 5m           |                |
+| Trade bin 1h           |                |
+| Trade bin 1d           |                |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|
-| Account info           |  ✔            |
-| Orders                 |  ✔            |
-| Positions              |                |
-| Trades                 |                |
-| Funding                |                |
-| Wallets                |  ✔            |
-| Balance                |                |
-| Notifications          |                |
+| Affilate               |                |
+| Execution              |                |
+| Order                  |                |
+| Margin                 |                |
+| Position               |                |
+| Private notifications  |                |
+| Transact               |                |
+| Wallet                 |                |
 
 **Pull Requests are welcome!**
 
