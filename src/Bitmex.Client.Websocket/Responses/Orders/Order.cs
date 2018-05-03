@@ -12,7 +12,7 @@ namespace Bitmex.Client.Websocket.Responses.Orders
 
         public long? Account { get; set; }
         public string Symbol { get; set; }
-        public BitmexSide Side { get; set; }
+        public BitmexSide? Side { get; set; }
 
         public double? SimpleOrderQty { get; set; }
         public long? OrderQty {get; set; }
@@ -33,7 +33,7 @@ namespace Bitmex.Client.Websocket.Responses.Orders
         public string ExecInst { get; set; }
         public string ContingencyType { get; set; }
         public string ExDestination { get; set; }
-        public string OrdStatus { get; set; }
+        public OrderStatus OrdStatus { get; set; }
         public string Triggered { get; set; }
 
         public bool? WorkingIndicator { get; set; }
@@ -46,8 +46,8 @@ namespace Bitmex.Client.Websocket.Responses.Orders
         public string MultiLegReportingType { get; set; }
         public string Text {get; set; }
 
-        public DateTime TransactTime { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime? TransactTime { get; set; }
+        public DateTime? Timestamp { get; set; }
 
     }
 }

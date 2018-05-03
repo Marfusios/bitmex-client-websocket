@@ -4,7 +4,7 @@ using Bitmex.Client.Websocket.Utils;
 
 namespace Bitmex.Client.Websocket.Responses.Wallets
 {
-    [DebuggerDisplay("Wallet: {Currency} - {Balance}")]
+    [DebuggerDisplay("Wallet: {Currency} - {BalanceBtc}")]
     public class Wallet
     {
         public long Account { get; set; }
@@ -27,6 +27,6 @@ namespace Bitmex.Client.Websocket.Responses.Wallets
         public string Script { get; set; }
         public string[] WithdrawalLock {get; set; }
 
-        public double Balance => BitmexConverter.ConvertToBtc(Currency, Amount ?? 0);
+        public double BalanceBtc => BitmexConverter.ConvertToBtc(Currency, Amount ?? 0);
     }
 }

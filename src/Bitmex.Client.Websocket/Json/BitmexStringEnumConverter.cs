@@ -15,7 +15,7 @@ namespace Bitmex.Client.Websocket.Json
             }
             catch
             {
-                Log.Warning($"Can't parse enum, using default. value: {reader.Value}, target type: {objectType}");
+                Log.Warning($"Can't parse enum, value: {reader.Value}, target type: {objectType}, using default '{existingValue}'");
                 return existingValue;
             }
         }

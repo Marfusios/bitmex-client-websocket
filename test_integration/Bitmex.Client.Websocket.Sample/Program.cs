@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
-using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Client;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Websockets;
@@ -17,8 +16,8 @@ namespace Bitmex.Client.Websocket.Sample
     {
         private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
 
-        private static readonly string API_KEY = "3th1G0VkjitH_qn6toZdGybm";
-        private static readonly string API_SECRET = "wT0LDvYkCp2hjVbkCK-q35oHS2CO7etz7OVi7-D757DXEmp2";
+        private static readonly string API_KEY = "";
+        private static readonly string API_SECRET = "";
 
         static void Main(string[] args)
         {
@@ -51,8 +50,10 @@ namespace Bitmex.Client.Websocket.Sample
                             
                         //client.Send(new PingRequest());
                         //client.Send(new BookSubscribeRequest());
-                        //client.Send(new TradesSubscribeRequest("XBTUSD"));
-                        client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+                        client.Send(new TradesSubscribeRequest("XBTUSD"));
+
+                        if(!string.IsNullOrWhiteSpace(API_SECRET))
+                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
                     });   
 
                     client.Streams.ErrorStream.Subscribe(x =>
@@ -63,6 +64,7 @@ namespace Bitmex.Client.Websocket.Sample
                         Log.Information($"Authentication happened, success: {x.Success}");
                         client.Send(new WalletSubscribeRequest());
                         client.Send(new OrderSubscribeRequest());
+                        client.Send(new PositionSubscribeRequest());
                     });
 
 
@@ -75,14 +77,21 @@ namespace Bitmex.Client.Websocket.Sample
 
                     client.Streams.WalletStream.Subscribe(y =>
                         y.Data.ToList().ForEach(x => 
-                            Log.Information($"Wallet {x.Account}, {x.Currency} amount: {x.Balance}"))
+                            Log.Information($"Wallet {x.Account}, {x.Currency} amount: {x.BalanceBtc}"))
                     );
 
                     client.Streams.OrderStream.Subscribe(y =>
                         y.Data.ToList().ForEach(x =>
                             Log.Information(
                                 $"Order {x.Symbol} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.OrderQty}, " +
-                                $"Price: {x.Price}, Direction: {x.Side}, Working: {x.WorkingIndicator}"))
+                                $"Price: {x.Price}, Direction: {x.Side}, Working: {x.WorkingIndicator}, Status: {x.OrdStatus}"))
+                    );
+
+                    client.Streams.PositionStream.Subscribe(y =>
+                        y.Data.ToList().ForEach(x =>
+                            Log.Information(
+                                $"Position {x.Symbol}, {x.Currency} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.CurrentQty}, " +
+                                $"Price: {x.LastPrice}, PNL: {x.UnrealisedPnl}"))
                     );
 
                     client.Streams.TradesStream.Subscribe(y =>

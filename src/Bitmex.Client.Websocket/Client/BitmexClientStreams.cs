@@ -4,6 +4,7 @@ using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 using Bitmex.Client.Websocket.Responses.Orders;
+using Bitmex.Client.Websocket.Responses.Positions;
 using Bitmex.Client.Websocket.Responses.Trades;
 using Bitmex.Client.Websocket.Responses.Wallets;
 
@@ -22,6 +23,7 @@ namespace Bitmex.Client.Websocket.Client
 
         internal readonly Subject<WalletResponse> WalletSubject = new Subject<WalletResponse>();
         internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
+        internal readonly Subject<PositionResponse> PositionSubject = new Subject<PositionResponse>();
 
 
 
@@ -44,5 +46,10 @@ namespace Bitmex.Client.Websocket.Client
         /// Stream of all active orders
         /// </summary>
         public IObservable<OrderResponse> OrderStream => OrderSubject.AsObservable();
+
+        /// <summary>
+        /// Stream of all active positions
+        /// </summary>
+        public IObservable<PositionResponse> PositionStream => PositionSubject.AsObservable();
     }
 }

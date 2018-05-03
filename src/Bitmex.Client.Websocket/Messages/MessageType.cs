@@ -15,6 +15,7 @@
         Trade,
         OrderBook,
         Wallet,
-        Order
+        Order,
+        Position
     }
 }

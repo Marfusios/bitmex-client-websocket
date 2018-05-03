@@ -86,7 +86,7 @@ More usage examples:
 | Execution              |                |
 | Order                  |  ✔            |
 | Margin                 |                |
-| Position               |                |
+| Position               |  ✔            |
 | Private notifications  |                |
 | Transact               |                |
 | Wallet                 |  ✔            |
