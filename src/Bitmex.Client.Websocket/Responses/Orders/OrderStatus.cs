@@ -5,6 +5,7 @@
         Undefined,
         New,
         Filled,
+        PartiallyFilled,
         Canceled
     }
 }
