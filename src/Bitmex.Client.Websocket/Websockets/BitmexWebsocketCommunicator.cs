@@ -25,8 +25,6 @@ namespace Bitmex.Client.Websocket.Websockets
         private readonly Subject<string> _messageReceivedSubject = new Subject<string>();
 
 
-        public IObservable<string> MessageReceived => _messageReceivedSubject.AsObservable();
-
         public BitmexWebsocketCommunicator(Uri url, Func<ClientWebSocket> clientFactory = null)
         {
             BmxValidations.ValidateInput(url, nameof(url));
@@ -37,9 +35,12 @@ namespace Bitmex.Client.Websocket.Websockets
                 Options = {KeepAliveInterval = new TimeSpan(0, 0, 0, 10)}
             }); 
 
-            var minute = 1000 * 60;
-            _lastChanceTimer = new Timer(async x => await LastChance(x), null, minute, minute);
+            var timerMs = 1001 * 2;
+            _lastChanceTimer = new Timer(async x => await LastChance(x), null, timerMs, timerMs);
         }
+
+        public IObservable<string> MessageReceived => _messageReceivedSubject.AsObservable();
+        public double ReconnectTimeoutMs { get; set; } = 10 * 1000;
 
         public void Dispose()
         {
@@ -105,7 +106,7 @@ namespace Bitmex.Client.Websocket.Websockets
                 return;
             Log.Debug(L("Reconnecting..."));
             _cancelation.Cancel();
-            await Task.Delay(10000);
+            await Task.Delay(1000);
 
             _cancelation = new CancellationTokenSource();
             await StartClient(_url, _cancelation.Token);
@@ -139,12 +140,14 @@ namespace Bitmex.Client.Websocket.Websockets
 
         private async Task LastChance(object state)
         {
-            var diffMin = Math.Abs(DateTime.UtcNow.Subtract(_lastReceivedMsg).TotalMinutes);
-            if(diffMin > 1)
-                Log.Debug(L($"Last message received {diffMin:F} min ago"));
-            if (diffMin > 3)
+            var timeoutMs = Math.Abs(ReconnectTimeoutMs);
+            var halfTimeoutMs = timeoutMs / 2.0;
+            var diffMs = Math.Abs(DateTime.UtcNow.Subtract(_lastReceivedMsg).TotalMilliseconds);
+            if(diffMs > halfTimeoutMs)
+                Log.Debug(L($"Last message received {diffMs:F} ms ago"));
+            if (diffMs > timeoutMs)
             {
-                Log.Debug(L("Last message received more than 3 min ago. Hard restart.."));
+                Log.Debug(L($"Last message received more than {timeoutMs:F} ms ago. Hard restart.."));
 
                 _client?.Abort();
                 _client?.Dispose();
