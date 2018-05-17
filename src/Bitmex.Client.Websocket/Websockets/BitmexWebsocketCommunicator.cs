@@ -13,7 +13,7 @@ namespace Bitmex.Client.Websocket.Websockets
     public class BitmexWebsocketCommunicator : IDisposable
     {
         private readonly Uri _url;
-        private readonly Timer _lastChanceTimer;
+        private Timer _lastChanceTimer;
         private readonly Func<ClientWebSocket> _clientFactory;
 
         private DateTime _lastReceivedMsg = DateTime.UtcNow; 
@@ -32,15 +32,26 @@ namespace Bitmex.Client.Websocket.Websockets
             _url = url;
             _clientFactory = clientFactory ?? (() => new ClientWebSocket()
             {
-                Options = {KeepAliveInterval = new TimeSpan(0, 0, 0, 10)}
+                Options = {KeepAliveInterval = new TimeSpan(0, 0, 5, 0)}
             }); 
-
-            var timerMs = 1001 * 2;
-            _lastChanceTimer = new Timer(async x => await LastChance(x), null, timerMs, timerMs);
         }
 
+        /// <summary>
+        /// Stream with raw received message
+        /// </summary>
         public IObservable<string> MessageReceived => _messageReceivedSubject.AsObservable();
-        public double ReconnectTimeoutMs { get; set; } = 10 * 1000;
+
+        /// <summary>
+        /// Time range in ms, how long to wait before reconnecting if no message comes from server.
+        /// Default 60000 ms (1 minute)
+        /// </summary>
+        public int ReconnectTimeoutMs { get; set; } = 60 * 1000;
+
+        /// <summary>
+        /// Time range in ms, how long to wait before reconnecting if last reconnection failed.
+        /// Default 60000 ms (1 minute)
+        /// </summary>
+        public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;
 
         public void Dispose()
         {
@@ -74,6 +85,7 @@ namespace Bitmex.Client.Websocket.Websockets
 
         private async Task StartClient(Uri uri, CancellationToken token)
         {
+            DeactiveLastChance();
             _client = _clientFactory();
             
             try
@@ -81,11 +93,14 @@ namespace Bitmex.Client.Websocket.Websockets
                 await _client.ConnectAsync(uri, token);
 #pragma warning disable 4014
                 Listen(_client, token);
-#pragma warning restore 4014
+#pragma warning restore 4014               
+                ActivateLastChance();
             }
             catch (Exception e)
             {
-                Log.Error(e, L("Exception while connecting"));
+                Log.Error(e, L("Exception while connecting. " +
+                               $"Waiting {ErrorReconnectTimeoutMs/1000} sec before next reconnection try."));
+                await Task.Delay(ErrorReconnectTimeoutMs, token);
                 await Reconnect();
             }
             
@@ -138,10 +153,22 @@ namespace Bitmex.Client.Websocket.Websockets
             } while (client.State == WebSocketState.Open && !token.IsCancellationRequested);
         }
 
+        private void ActivateLastChance()
+        {
+            var timerMs = 1000 * 5;
+            _lastChanceTimer = new Timer(async x => await LastChance(x), null, timerMs, timerMs);
+        }
+
+        private void DeactiveLastChance()
+        {
+            _lastChanceTimer?.Dispose();
+            _lastChanceTimer = null;
+        }
+
         private async Task LastChance(object state)
         {
             var timeoutMs = Math.Abs(ReconnectTimeoutMs);
-            var halfTimeoutMs = timeoutMs / 2.0;
+            var halfTimeoutMs = timeoutMs / 1.5;
             var diffMs = Math.Abs(DateTime.UtcNow.Subtract(_lastReceivedMsg).TotalMilliseconds);
             if(diffMs > halfTimeoutMs)
                 Log.Debug(L($"Last message received {diffMs:F} ms ago"));

@@ -105,7 +105,7 @@ namespace Bitmex.Client.Websocket.Sample
                             $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
                         );
 
-                    communicator.Start().Wait();
+                    communicator.Start();
                     
                     ExitEvent.WaitOne();
                 }
