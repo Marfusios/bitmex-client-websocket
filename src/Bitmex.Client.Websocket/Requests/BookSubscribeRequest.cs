@@ -1,5 +1,4 @@
 ﻿using Bitmex.Client.Websocket.Validations;
-using Newtonsoft.Json;
 
 namespace Bitmex.Client.Websocket.Requests
 {

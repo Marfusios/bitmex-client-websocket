@@ -68,7 +68,7 @@ More usage examples:
 | Orderbook L2           |  ✔            |
 | Orderbook L10          |                |
 | Public notifications   |                |
-| Quote                  |                |
+| Quote                  |  ✔            |
 | Quote bin 1m           |                |
 | Quote bin 5m           |                |
 | Quote bin 1h           |                |

@@ -51,6 +51,7 @@ namespace Bitmex.Client.Websocket.Sample
                         //client.Send(new PingRequest());
                         //client.Send(new BookSubscribeRequest());
                         client.Send(new TradesSubscribeRequest("XBTUSD"));
+                        client.Send(new QuoteSubscribeRequest("XBTUSD"));
 
                         if(!string.IsNullOrWhiteSpace(API_SECRET))
                             client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -104,6 +105,12 @@ namespace Bitmex.Client.Websocket.Sample
                         book.Data.Take(100).ToList().ForEach(x => Log.Information(
                             $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
                         );
+
+                    client.Streams.QuoteStream.Subscribe(y =>
+                        y.Data.ToList().ForEach(x => 
+                            Log.Information($"Quote {x.Symbol}. Bid: {x.BidPrice} - {x.BidSize} Ask: {x.AskPrice} - {x.AskSize}"))
+                    );
+
 
                     communicator.Start();
                     

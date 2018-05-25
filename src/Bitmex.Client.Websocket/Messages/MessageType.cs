@@ -16,6 +16,7 @@
         OrderBook,
         Wallet,
         Order,
-        Position
+        Position,
+        Quote
     }
 }
