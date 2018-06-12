@@ -64,7 +64,7 @@ More usage examples:
 | Funding                |                |
 | Instrument             |                |
 | Insurance              |                |
-| Liquidation            |                |
+| Liquidation            |  ✔            |
 | Orderbook L2           |  ✔            |
 | Orderbook L10          |                |
 | Public notifications   |                |
