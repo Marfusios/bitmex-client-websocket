@@ -57,6 +57,6 @@ namespace Bitmex.Client.Websocket.Responses
         /// When multiple subscriptions are active to the same table, use the `filter` to correlate which datagram
         /// belongs to which subscription, as the `table` property will not contain the subscription's symbol.
         /// </summary>
-        public Dictionary<double, string> Filter { get; set; }
+        public Dictionary<string, string> Filter { get; set; }
     }
 }
