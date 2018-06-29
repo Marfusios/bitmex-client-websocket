@@ -45,11 +45,11 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                     {
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
                            
-                        client.Send(new PingRequest());
-                        client.Send(new TradesSubscribeRequest("XBTUSD"));
+                        client.Send(new PingRequest()).Wait();
+                        client.Send(new TradesSubscribeRequest("XBTUSD")).Wait();
 
                         if (!string.IsNullOrWhiteSpace(API_SECRET))
-                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET)).Wait();
                     });   
 
                     client.Streams.ErrorStream.Subscribe(x =>
@@ -58,9 +58,9 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                     client.Streams.AuthenticationStream.Subscribe(x =>
                     {
                         Log.Information($"Authentication happened, success: {x.Success}");
-                        client.Send(new WalletSubscribeRequest());
-                        client.Send(new OrderSubscribeRequest());
-                        client.Send(new PositionSubscribeRequest());
+                        client.Send(new WalletSubscribeRequest()).Wait();
+                        client.Send(new OrderSubscribeRequest()).Wait();
+                        client.Send(new PositionSubscribeRequest()).Wait();
                     });
 
                     client.Streams.PongStream.Subscribe(x =>

@@ -37,14 +37,22 @@ namespace Bitmex.Client.Websocket.Client
             _messageReceivedSubsciption?.Dispose();
         }
 
-        public Task Send<T>(T request) where T: RequestBase
+        public async Task Send<T>(T request) where T: RequestBase
         {
-            BmxValidations.ValidateInput(request, nameof(request));
+            try
+            {
+                BmxValidations.ValidateInput(request, nameof(request));
 
-            var serialized = request.IsRaw ? 
-                request.OperationString :
-                BitmexJsonSerializer.Serialize(request);
-            return _communicator.Send(serialized);
+                var serialized = request.IsRaw ? 
+                    request.OperationString :
+                    BitmexJsonSerializer.Serialize(request);
+                await _communicator.Send(serialized);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, L($"Exception while sending message '{request}'. Error: {e.Message}"));
+                throw;
+            }
         }
 
         public Task Authenticate(string apiKey, string apiSecret)

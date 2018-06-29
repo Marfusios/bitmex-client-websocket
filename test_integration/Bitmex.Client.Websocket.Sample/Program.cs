@@ -35,6 +35,7 @@ namespace Bitmex.Client.Websocket.Sample
             Log.Debug("====================================");
             Log.Debug("              STARTING              ");
             Log.Debug("====================================");
+           
 
 
             var url = BitmexValues.ApiWebsocketUrl;
@@ -48,14 +49,14 @@ namespace Bitmex.Client.Websocket.Sample
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
 
                             
-                        //client.Send(new PingRequest());
-                        //client.Send(new BookSubscribeRequest());
-                        client.Send(new TradesSubscribeRequest("XBTUSD"));
-                        //client.Send(new QuoteSubscribeRequest("XBTUSD"));
-                        client.Send(new LiquidationSubscribeRequest());
+                        //client.Send(new PingRequest()).Wait();
+                        //client.Send(new BookSubscribeRequest()).Wait();
+                        client.Send(new TradesSubscribeRequest("XBTUSD")).Wait();
+                        //client.Send(new QuoteSubscribeRequest("XBTUSD")).Wait();
+                        client.Send(new LiquidationSubscribeRequest()).Wait();
 
                         if (!string.IsNullOrWhiteSpace(API_SECRET))
-                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET)).Wait();
                     });   
 
                     client.Streams.ErrorStream.Subscribe(x =>
@@ -64,9 +65,9 @@ namespace Bitmex.Client.Websocket.Sample
                     client.Streams.AuthenticationStream.Subscribe(x =>
                     {
                         Log.Information($"Authentication happened, success: {x.Success}");
-                        client.Send(new WalletSubscribeRequest());
-                        client.Send(new OrderSubscribeRequest());
-                        client.Send(new PositionSubscribeRequest());
+                        client.Send(new WalletSubscribeRequest()).Wait();
+                        client.Send(new OrderSubscribeRequest()).Wait();
+                        client.Send(new PositionSubscribeRequest()).Wait();
                     });
 
 
