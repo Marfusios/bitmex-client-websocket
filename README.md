@@ -1,4 +1,4 @@
-![Logo](https://www.bitmex.com/img/bitmex-logo-alt.png)
+![Logo](bitmex-logo-alt.png)
 # Bitmex websocket API client [![Build Status](https://travis-ci.org/Marfusios/bitmex-client-websocket.svg?branch=master)](https://travis-ci.org/Marfusios/bitmex-client-websocket) [![NuGet version](https://badge.fury.io/nu/Bitmex.Client.Websocket.svg)](https://badge.fury.io/nu/Bitmex.Client.Websocket)
 
 This is a C# implementation of the Bitmex websocket API found here:
@@ -94,6 +94,6 @@ More usage examples:
 **Pull Requests are welcome!**
 
 Donations gratefully accepted.
-* Bitcoin: 1HfxKZhvm68qK3gE8bJAdDBWkcZ2AFs9pw
-* Litecoin: LftdENE8DTbLpV6RZLKLdzYzVU82E6dz4W
-* Ethereum: 0xb9637c56b307f24372cdcebd208c0679d4e48a47
+* [![Donate with Bitcoin](https://en.cryptobadges.io/badge/small/1HfxKZhvm68qK3gE8bJAdDBWkcZ2AFs9pw)](https://en.cryptobadges.io/donate/1HfxKZhvm68qK3gE8bJAdDBWkcZ2AFs9pw)
+* [![Donate with Litecoin](https://en.cryptobadges.io/badge/small/LftdENE8DTbLpV6RZLKLdzYzVU82E6dz4W)](https://en.cryptobadges.io/donate/LftdENE8DTbLpV6RZLKLdzYzVU82E6dz4W)
+* [![Donate with Ethereum](https://en.cryptobadges.io/badge/small/0xb9637c56b307f24372cdcebd208c0679d4e48a47)](https://en.cryptobadges.io/donate/0xb9637c56b307f24372cdcebd208c0679d4e48a47)
