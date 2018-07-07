@@ -1,21 +1,14 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Bitmex.Client.Websocket.Utils
 {
     public static class BitmexAuthentication
     {
-
-        public static long CreateAuthNonce(long? time = null)
+        public static string BitmexUrl()
         {
-            var timeSafe = time ?? BitmexTime.NowMs();
-            return timeSafe * 1000;
-        }
-
-        public static string CreateAuthPayload(long nonce)
-        {
-            return "GET/realtime" + nonce;
-        }
+			return "GET/realtime";
+		}
 
         public static string CreateSignature(string key, string message)
         {
@@ -40,5 +33,7 @@ namespace Bitmex.Client.Websocket.Utils
                 return ByteToString(hashmessage).ToLower();
             }
         }
-    }
+
+	    
+	}
 }
