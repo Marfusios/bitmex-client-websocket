@@ -23,6 +23,7 @@ namespace Bitmex.Client.Websocket.Websockets
         private CancellationTokenSource _cancelation;
 
         private readonly Subject<string> _messageReceivedSubject = new Subject<string>();
+        private readonly Subject<ReconnectionType> _reconnectionSubject = new Subject<ReconnectionType>();
 
 
         public BitmexWebsocketCommunicator(Uri url, Func<ClientWebSocket> clientFactory = null)
@@ -37,9 +38,14 @@ namespace Bitmex.Client.Websocket.Websockets
         }
 
         /// <summary>
-        /// Stream with raw received message
+        /// Stream with received message (raw format)
         /// </summary>
         public IObservable<string> MessageReceived => _messageReceivedSubject.AsObservable();
+
+        /// <summary>
+        /// Stream for reconnection event (trigerred after the new connection) 
+        /// </summary>
+        public IObservable<ReconnectionType> ReconnectionHappened => _reconnectionSubject.AsObservable();
 
         /// <summary>
         /// Time range in ms, how long to wait before reconnecting if no message comes from server.
@@ -53,6 +59,9 @@ namespace Bitmex.Client.Websocket.Websockets
         /// </summary>
         public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;
 
+        /// <summary>
+        /// Terminate the websocket connection and cleanup everything
+        /// </summary>
         public void Dispose()
         {
             _disposing = true;
@@ -63,15 +72,22 @@ namespace Bitmex.Client.Websocket.Websockets
             _client?.Dispose();
             _cancelation?.Dispose();
         }
-
+       
+        /// <summary>
+        /// Start listening to the websocket stream on the background thread
+        /// </summary>
         public Task Start()
         {
             Log.Debug(L("Starting.."));
             _cancelation = new CancellationTokenSource();
 
-            return StartClient(_url, _cancelation.Token);
+            return StartClient(_url, _cancelation.Token, ReconnectionType.Initial);
         }
 
+        /// <summary>
+        /// Send message to the websocket channel
+        /// </summary>
+        /// <param name="message">Message to be sent</param>
         public async Task Send(string message)
         {
             BmxValidations.ValidateInput(message, nameof(message));
@@ -83,7 +99,7 @@ namespace Bitmex.Client.Websocket.Websockets
             await client.SendAsync(messageSegment, WebSocketMessageType.Text, true, _cancelation.Token);
         }
 
-        private async Task StartClient(Uri uri, CancellationToken token)
+        private async Task StartClient(Uri uri, CancellationToken token, ReconnectionType type)
         {
             DeactiveLastChance();
             _client = _clientFactory();
@@ -95,13 +111,14 @@ namespace Bitmex.Client.Websocket.Websockets
                 Listen(_client, token);
 #pragma warning restore 4014               
                 ActivateLastChance();
+                _reconnectionSubject.OnNext(type);
             }
             catch (Exception e)
             {
                 Log.Error(e, L("Exception while connecting. " +
                                $"Waiting {ErrorReconnectTimeoutMs/1000} sec before next reconnection try."));
                 await Task.Delay(ErrorReconnectTimeoutMs, token);
-                await Reconnect();
+                await Reconnect(ReconnectionType.Error);
             }
             
         }
@@ -110,12 +127,12 @@ namespace Bitmex.Client.Websocket.Websockets
         {
             if (_client == null || (_client.State != WebSocketState.Open && _client.State != WebSocketState.Connecting))
             {
-                await Reconnect();
+                await Reconnect(ReconnectionType.Lost);
             }
             return _client;
         }
 
-        private async Task Reconnect()
+        private async Task Reconnect( ReconnectionType type)
         {
             if (_disposing)
                 return;
@@ -124,33 +141,44 @@ namespace Bitmex.Client.Websocket.Websockets
             await Task.Delay(1000);
 
             _cancelation = new CancellationTokenSource();
-            await StartClient(_url, _cancelation.Token);
+            await StartClient(_url, _cancelation.Token, type);
         }
 
         private async Task Listen(ClientWebSocket client, CancellationToken token)
         {
-            do
+            try
             {
-                WebSocketReceiveResult result = null;
-                var buffer = new byte[1000];
-                var message = new ArraySegment<byte>(buffer);
-                var resultMessage = new StringBuilder();
                 do
                 {
-                    result = await client.ReceiveAsync(message, token);
-                    var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    resultMessage.Append(receivedMessage);
-                    if (result.MessageType != WebSocketMessageType.Text)
-                        break;
+                    WebSocketReceiveResult result = null;
+                    var buffer = new byte[1000];
+                    var message = new ArraySegment<byte>(buffer);
+                    var resultMessage = new StringBuilder();
+                    do
+                    {
+                        result = await client.ReceiveAsync(message, token);
+                        var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                        resultMessage.Append(receivedMessage);
+                        if (result.MessageType != WebSocketMessageType.Text)
+                            break;
 
-                } while (!result.EndOfMessage);
+                    } while (!result.EndOfMessage);
 
-                var received = resultMessage.ToString();
-                Log.Verbose(L($"Received:  {received}"));
-                _lastReceivedMsg = DateTime.UtcNow;
-                _messageReceivedSubject.OnNext(received);
+                    var received = resultMessage.ToString();
+                    Log.Verbose(L($"Received:  {received}"));
+                    _lastReceivedMsg = DateTime.UtcNow;
+                    _messageReceivedSubject.OnNext(received);
 
-            } while (client.State == WebSocketState.Open && !token.IsCancellationRequested);
+                } while (client.State == WebSocketState.Open && !token.IsCancellationRequested);
+            }
+            catch (TaskCanceledException)
+            {
+                // task was canceled, ignore
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, L("Error while listening to websocket stream"));
+            }
         }
 
         private void ActivateLastChance()
@@ -178,7 +206,7 @@ namespace Bitmex.Client.Websocket.Websockets
 
                 _client?.Abort();
                 _client?.Dispose();
-                await Reconnect();
+                await Reconnect(ReconnectionType.NoMessageReceived);
             }
         }
 

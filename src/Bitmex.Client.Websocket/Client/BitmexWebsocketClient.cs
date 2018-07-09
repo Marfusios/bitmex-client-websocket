@@ -30,13 +30,24 @@ namespace Bitmex.Client.Websocket.Client
             _messageReceivedSubsciption = _communicator.MessageReceived.Subscribe(HandleMessage);
         }
 
+        /// <summary>
+        /// Provided message streams
+        /// </summary>
         public BitmexClientStreams Streams { get; } = new BitmexClientStreams();
 
+        /// <summary>
+        /// Cleanup everything
+        /// </summary>
         public void Dispose()
         {
             _messageReceivedSubsciption?.Dispose();
         }
 
+        /// <summary>
+        /// Serializes request and sends message via websocket communicator. 
+        /// It logs and re-throws every exception. 
+        /// </summary>
+        /// <param name="request">Request/message to be sent</param>
         public async Task Send<T>(T request) where T: RequestBase
         {
             try
@@ -55,6 +66,11 @@ namespace Bitmex.Client.Websocket.Client
             }
         }
 
+        /// <summary>
+        /// Sends authentication request via websocket communicator
+        /// </summary>
+        /// <param name="apiKey">Your API key</param>
+        /// <param name="apiSecret">Your API secret</param>
         public Task Authenticate(string apiKey, string apiSecret)
         {
             return Send(new AuthenticationRequest(apiKey, apiSecret));
