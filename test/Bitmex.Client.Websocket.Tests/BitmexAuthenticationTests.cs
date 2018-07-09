@@ -8,11 +8,12 @@ namespace Bitmex.Client.Websocket.Tests
         [Fact]
         public void CreateSignature_ShouldReturnCorrectString()
         {
-            var nonce = BitmexAuthentication.CreateAuthNonce(123456);
-            var payload = BitmexAuthentication.CreateAuthPayload(nonce);
-            var signature = BitmexAuthentication.CreateSignature(payload, "api_secret");
+	        var _url = BitmexAuthentication.BitmexUrl();
+	        var _authExpires = BitmexTime.GetUnixTime().ToString();
+			var signature = BitmexAuthentication.CreateSignature("api_secret", $"{_url}{_authExpires}");
 
-            Assert.Equal("7657aa8b00b54ee7d58ed0ed42b6cad6d8b1e008bee4617b70d11cd87dbbc1e6", signature);
+			// Need to finish this
+			Assert.Equal("7657aa8b00b54ee7d58ed0ed42b6cad6d8b1e008bee4617b70d11cd87dbbc1e6", signature);
         }
     }
 }
