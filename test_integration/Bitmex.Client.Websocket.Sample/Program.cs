@@ -73,9 +73,9 @@ namespace Bitmex.Client.Websocket.Sample
         {
             await client.Send(new PingRequest());
             //await client.Send(new BookSubscribeRequest());
-            //await client.Send(new TradesSubscribeRequest("XBTUSD"));
+            await client.Send(new TradesSubscribeRequest("XBTUSD"));
             await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
-            await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
+            //await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
             //await client.Send(new QuoteSubscribeRequest("XBTUSD"));
             await client.Send(new LiquidationSubscribeRequest());
 
