@@ -8,6 +8,7 @@ using Bitmex.Client.Websocket.Responses.Orders;
 using Bitmex.Client.Websocket.Responses.Positions;
 using Bitmex.Client.Websocket.Responses.Quotes;
 using Bitmex.Client.Websocket.Responses.Trades;
+using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
 
 namespace Bitmex.Client.Websocket.Client
@@ -21,6 +22,7 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<AuthenticationResponse> AuthenticationSubject = new Subject<AuthenticationResponse>();
 
         internal readonly Subject<TradeResponse> TradesSubject = new Subject<TradeResponse>();
+        internal readonly Subject<TradeBinResponse> TradeBinSubject = new Subject<TradeBinResponse>();
         internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
         internal readonly Subject<QuoteResponse> QuoteSubject = new Subject<QuoteResponse>();
         internal readonly Subject<LiquidationResponse> LiquidationSubject = new Subject<LiquidationResponse>();
@@ -38,6 +40,7 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
 
         public IObservable<TradeResponse> TradesStream => TradesSubject.AsObservable();
+        public IObservable<TradeBinResponse> TradeBinStream => TradeBinSubject.AsObservable();
         public IObservable<BookResponse> BookStream => BookSubject.AsObservable();
         public IObservable<QuoteResponse> QuoteStream => QuoteSubject.AsObservable();
         public IObservable<LiquidationResponse> LiquidationStream => LiquidationSubject.AsObservable();

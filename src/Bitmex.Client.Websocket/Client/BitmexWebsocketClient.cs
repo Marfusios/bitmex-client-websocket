@@ -9,6 +9,7 @@ using Bitmex.Client.Websocket.Responses.Orders;
 using Bitmex.Client.Websocket.Responses.Positions;
 using Bitmex.Client.Websocket.Responses.Quotes;
 using Bitmex.Client.Websocket.Responses.Trades;
+using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
 using Bitmex.Client.Websocket.Websockets;
@@ -128,6 +129,7 @@ namespace Bitmex.Client.Websocket.Client
             return
 
                 TradeResponse.TryHandle(response, Streams.TradesSubject) ||
+                TradeBinResponse.TryHandle(response, Streams.TradeBinSubject) ||
                 BookResponse.TryHandle(response, Streams.BookSubject) ||
                 QuoteResponse.TryHandle(response, Streams.QuoteSubject) ||
                 LiquidationResponse.TryHandle(response, Streams.LiquidationSubject) ||
