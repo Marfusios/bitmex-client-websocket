@@ -75,10 +75,10 @@ More usage examples:
 | Quote bin 1d           |                |
 | Settlement             |                |
 | Trade                  |  ✔            |
-| Trade bin 1m           |                |
-| Trade bin 5m           |                |
-| Trade bin 1h           |                |
-| Trade bin 1d           |                |
+| Trade bin 1m           |  ✔            |
+| Trade bin 5m           |  ✔            |
+| Trade bin 1h           |  ✔            |
+| Trade bin 1d           |  ✔            |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|
