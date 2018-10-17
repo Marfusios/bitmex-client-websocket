@@ -58,7 +58,7 @@ namespace Bitmex.Client.Websocket.Sample
                     SubscribeToStreams(client);
 
                     communicator.Start();
-                    
+
                     ExitEvent.WaitOne();
                 }
             }
@@ -125,7 +125,7 @@ namespace Bitmex.Client.Websocket.Sample
 
             client.Streams.TradesStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
-                    Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Amount: {x.Size}, " +
+                    Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, [{x.Side}] Amount: {x.Size}, " +
                                     $"Price: {x.Price}, Direction: {x.TickDirection}"))
             );
 
@@ -142,13 +142,13 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.LiquidationStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
                     Log.Information(
-                        $"Liquadation Action:{y.Action} OrderID:{x.OrderID} Symbol:{x.Symbol} Side:{x.Side} Price:{x.Price} leavesQty:{x.leavesQty}"))
+                        $"Liquadation Action: {y.Action}, OrderID: {x.OrderID}, Symbol: {x.Symbol}, Side: {x.Side}, Price: {x.Price}, LeavesQty: {x.leavesQty}"))
             );
 
             client.Streams.TradeBinStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
-                Log.Information($"TradeBin Table:{y.Table} {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Open: {x.Open}, " +
-                        $"Close: {x.Close}, Volume: {x.Volume}"))
+                Log.Information($"TradeBin table:{y.Table} {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Open: {x.Open}, " +
+                        $"Close: {x.Close}, Volume: {x.Volume}, Trades: {x.Trades}"))
             );
 
         }

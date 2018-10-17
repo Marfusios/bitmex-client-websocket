@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -19,12 +20,14 @@ namespace Bitmex.Client.Websocket.Websockets
         private DateTime _lastReceivedMsg = DateTime.UtcNow; 
 
         private bool _disposing = false;
+        private bool _started = false;
         private ClientWebSocket _client;
         private CancellationTokenSource _cancelation;
 
         private readonly Subject<string> _messageReceivedSubject = new Subject<string>();
         private readonly Subject<ReconnectionType> _reconnectionSubject = new Subject<ReconnectionType>();
 
+        private readonly BlockingCollection<string> _messagesToSendQueue = new BlockingCollection<string>();
 
         public BitmexWebsocketCommunicator(Uri url, Func<ClientWebSocket> clientFactory = null)
         {
@@ -71,6 +74,8 @@ namespace Bitmex.Client.Websocket.Websockets
             _client?.Abort();
             _client?.Dispose();
             _cancelation?.Dispose();
+            _messagesToSendQueue?.Dispose();
+            _started = false;
         }
        
         /// <summary>
@@ -78,20 +83,58 @@ namespace Bitmex.Client.Websocket.Websockets
         /// </summary>
         public Task Start()
         {
+            if (_started)
+            {
+                Log.Debug(L("Communicator already started, ignoring.."));
+                return Task.CompletedTask;
+            }
+            _started = true;
+
             Log.Debug(L("Starting.."));
             _cancelation = new CancellationTokenSource();
+
+            Task.Factory.StartNew(_ => SendFromQueue(), TaskCreationOptions.LongRunning, _cancelation.Token);
 
             return StartClient(_url, _cancelation.Token, ReconnectionType.Initial);
         }
 
         /// <summary>
-        /// Send message to the websocket channel
+        /// Send message to the websocket channel. 
+        /// It inserts the message to the queue and actual sending is done on an other thread
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        public async Task Send(string message)
+        public Task Send(string message)
         {
             BmxValidations.ValidateInput(message, nameof(message));
 
+            _messagesToSendQueue.Add(message);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Send message to the websocket channel. 
+        /// It doesn't use a sending queue, 
+        /// beware of issue while sending two messages in the exact same time 
+        /// on the full .NET Framework platform
+        /// </summary>
+        /// <param name="message">Message to be sent</param>
+        public Task SendInstant(string message)
+        {
+            BmxValidations.ValidateInput(message, nameof(message));
+
+            return SendInternal(message);
+        }
+
+        private async Task SendFromQueue()
+        {
+            foreach (var message in _messagesToSendQueue.GetConsumingEnumerable(_cancelation.Token))
+            {
+                await SendInternal(message);
+            }
+        }
+
+        private async Task SendInternal(string message)
+        {
             Log.Verbose(L($"Sending:  {message}"));
             var buffer = Encoding.UTF8.GetBytes(message);
             var messageSegment = new ArraySegment<byte>(buffer);
