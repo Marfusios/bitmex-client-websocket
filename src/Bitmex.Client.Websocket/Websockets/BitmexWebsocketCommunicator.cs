@@ -20,7 +20,6 @@ namespace Bitmex.Client.Websocket.Websockets
         private DateTime _lastReceivedMsg = DateTime.UtcNow; 
 
         private bool _disposing = false;
-        private bool _started = false;
         private ClientWebSocket _client;
         private CancellationTokenSource _cancelation;
         private CancellationTokenSource _cancelationTotal;
@@ -64,6 +63,16 @@ namespace Bitmex.Client.Websocket.Websockets
         public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;
 
         /// <summary>
+        /// Returns true if Start() method was called at least once. False if not started or disposed
+        /// </summary>
+        public bool IsStarted { get; private set; }
+
+        /// <summary>
+        /// Returns true if communicator is running and connected to the server
+        /// </summary>
+        public bool IsRunning { get; private set; }
+
+        /// <summary>
         /// Terminate the websocket connection and cleanup everything
         /// </summary>
         public void Dispose()
@@ -78,7 +87,7 @@ namespace Bitmex.Client.Websocket.Websockets
             _cancelation?.Dispose();
             _cancelationTotal?.Dispose();
             _messagesToSendQueue?.Dispose();
-            _started = false;
+            IsStarted = false;
         }
        
         /// <summary>
@@ -86,12 +95,12 @@ namespace Bitmex.Client.Websocket.Websockets
         /// </summary>
         public Task Start()
         {
-            if (_started)
+            if (IsStarted)
             {
                 Log.Debug(L("Communicator already started, ignoring.."));
                 return Task.CompletedTask;
             }
-            _started = true;
+            IsStarted = true;
 
             Log.Debug(L("Starting.."));
             _cancelation = new CancellationTokenSource();
@@ -129,6 +138,20 @@ namespace Bitmex.Client.Websocket.Websockets
             return SendInternal(message);
         }
 
+        /// <summary>
+        /// Force reconnection. 
+        /// Closes current websocket stream and perform a new connection to the server.
+        /// </summary>
+        public async Task Reconnect()
+        {
+            if (!IsStarted)
+            {
+                Log.Debug(L("Communicator not started, ignoring reconnection.."));
+                return;
+            }
+            await Reconnect(ReconnectionType.ByUser);
+        }
+
         private async Task SendFromQueue()
         {
             foreach (var message in _messagesToSendQueue.GetConsumingEnumerable(_cancelationTotal.Token))
@@ -158,6 +181,7 @@ namespace Bitmex.Client.Websocket.Websockets
                 Listen(_client, token);
 #pragma warning restore 4014               
                 ActivateLastChance();
+                IsRunning = true;
                 _reconnectionSubject.OnNext(type);
             }
             catch (Exception e)
@@ -180,6 +204,7 @@ namespace Bitmex.Client.Websocket.Websockets
 
         private async Task Reconnect( ReconnectionType type)
         {
+            IsRunning = false;
             if (_disposing)
                 return;
             Log.Debug(L("Reconnecting..."));

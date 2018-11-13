@@ -42,7 +42,8 @@ namespace Bitmex.Client.Websocket.Sample
             var url = BitmexValues.ApiWebsocketUrl;
             using (var communicator = new BitmexWebsocketCommunicator(url))
             {
-                communicator.ReconnectTimeoutMs = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                communicator.ReconnectTimeoutMs = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
+
                 communicator.ReconnectionHappened.Subscribe(type =>
                     Log.Information($"Reconnection happened, type: {type}"));
 
@@ -72,12 +73,12 @@ namespace Bitmex.Client.Websocket.Sample
         private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
         {
             await client.Send(new PingRequest());
-            //await client.Send(new BookSubscribeRequest());
-            await client.Send(new TradesSubscribeRequest("XBTUSD"));
-            await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
+            await client.Send(new BookSubscribeRequest("XBTUSD"));
+            //await client.Send(new TradesSubscribeRequest("XBTUSD"));
+            //await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
             //await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
             //await client.Send(new QuoteSubscribeRequest("XBTUSD"));
-            await client.Send(new LiquidationSubscribeRequest());
+            //await client.Send(new LiquidationSubscribeRequest());
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
                 await client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -126,7 +127,7 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.TradesStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
                     Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, [{x.Side}] Amount: {x.Size}, " +
-                                    $"Price: {x.Price}, Direction: {x.TickDirection}"))
+                                    $"Price: {x.Price}"))
             );
 
             client.Streams.BookStream.Subscribe(book =>
