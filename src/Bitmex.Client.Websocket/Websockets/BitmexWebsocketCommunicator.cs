@@ -177,12 +177,12 @@ namespace Bitmex.Client.Websocket.Websockets
             try
             {
                 await _client.ConnectAsync(uri, token);
+                IsRunning = true;
+                _reconnectionSubject.OnNext(type);
 #pragma warning disable 4014
                 Listen(_client, token);
 #pragma warning restore 4014               
                 ActivateLastChance();
-                IsRunning = true;
-                _reconnectionSubject.OnNext(type);
             }
             catch (Exception e)
             {
