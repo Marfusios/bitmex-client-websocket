@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Websockets;
 using Xunit;
 

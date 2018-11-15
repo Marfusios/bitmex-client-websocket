@@ -18,4 +18,14 @@
     <ProjectReference Include="..\..\src\Bitmex.Client.Websocket\Bitmex.Client.Websocket.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="data\bitmex_raw_xbtusd_2018-11-13.txt.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

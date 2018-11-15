@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
@@ -12,7 +13,6 @@ using Bitmex.Client.Websocket.Responses.Trades;
 using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
-using Bitmex.Client.Websocket.Websockets;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
@@ -20,10 +20,10 @@ namespace Bitmex.Client.Websocket.Client
 {
     public class BitmexWebsocketClient : IDisposable
     {
-        private readonly BitmexWebsocketCommunicator _communicator;
+        private readonly IBitmexCommunicator _communicator;
         private readonly IDisposable _messageReceivedSubsciption;
 
-        public BitmexWebsocketClient(BitmexWebsocketCommunicator communicator)
+        public BitmexWebsocketClient(IBitmexCommunicator communicator)
         {
             BmxValidations.ValidateInput(communicator, nameof(communicator));
 

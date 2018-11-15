@@ -6,12 +6,13 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Validations;
 using Serilog;
 
 namespace Bitmex.Client.Websocket.Websockets
 {
-    public class BitmexWebsocketCommunicator : IDisposable
+    public class BitmexWebsocketCommunicator : IBitmexCommunicator
     {
         private readonly Uri _url;
         private Timer _lastChanceTimer;
