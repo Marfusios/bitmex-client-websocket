@@ -5,6 +5,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Communicator;
+using Websocket.Client;
 
 namespace Bitmex.Client.Websocket.Files
 {

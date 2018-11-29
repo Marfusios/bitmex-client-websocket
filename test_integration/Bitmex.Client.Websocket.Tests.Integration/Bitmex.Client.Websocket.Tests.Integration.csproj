@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="data\bitmex_raw_xbtusd_2018-11-13.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="data\bitmex_raw_xbtusd_2018-11-13.txt.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

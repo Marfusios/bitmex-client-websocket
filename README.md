@@ -10,7 +10,7 @@ https://www.bitmex.com/app/wsAPI
 
 ### Features
 
-* instalation via NuGet ([Bitmex.Client.Websocket](https://www.nuget.org/packages/Bitmex.Client.Websocket))
+* installation via NuGet ([Bitmex.Client.Websocket](https://www.nuget.org/packages/Bitmex.Client.Websocket))
 * public and authenticated API
 * targeting .NET Standard 2.0 (.NET Core, Linux/MacOS compatible)
 * reactive extensions ([Rx.NET](https://github.com/Reactive-Extensions/Rx.NET))
