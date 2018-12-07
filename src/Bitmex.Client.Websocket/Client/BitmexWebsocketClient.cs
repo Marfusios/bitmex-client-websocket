@@ -58,7 +58,7 @@ namespace Bitmex.Client.Websocket.Client
                 var serialized = request.IsRaw ? 
                     request.OperationString :
                     BitmexJsonSerializer.Serialize(request);
-                await _communicator.Send(serialized);
+                await _communicator.Send(serialized).ConfigureAwait(false);
             }
             catch (Exception e)
             {
