@@ -200,6 +200,11 @@ client
 // ----- ----- code2 ----- code2 code2 ----
 ```
 
+#### Desktop application (WinForms or WPF)
+
+Due to the large amount of questions about integration of this library into a desktop application (old full .NET Framework), I've prepared WinForms example ([link](test_integration/Bitmex.Client.Websocket.Sample.WinForms)). 
+
+![WinForms example screen](test_integration/Bitmex.Client.Websocket.Sample.WinForms/winforms_example_app.png)
 
 ### Available for help
 I do consulting, please don't hesitate to contact me if you have a custom solution you would like me to implement ([web](http://mkotas.cz/), 
