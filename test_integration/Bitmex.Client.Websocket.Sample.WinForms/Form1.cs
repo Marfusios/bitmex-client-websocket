@@ -15,6 +15,12 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
         public Action OnStart { get; set; }
         public Action OnStop { get; set; }
 
+        public string Pair
+        {
+            get => tbPair.Text;
+            set => SetTextOnGuiThread(tbPair, value);
+        }
+
         public string Bid
         {
             get => tbBid.Text;
@@ -55,6 +61,24 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             tb15MinTrades.ForeColor = GetForeColorFor(side);
         }
 
+        void IStatsView.Trades1Hour(string value, Side side)
+        {
+            Trades1Hour = value;
+            tb1HoursTrades.ForeColor = GetForeColorFor(side);
+        }
+
+        void IStatsView.Trades24Hours(string value, Side side)
+        {
+            Trades24Hours = value;
+            tb24HoursTrades.ForeColor = GetForeColorFor(side);
+        }
+
+        public void Status(string value, StatusType type)
+        {
+            SetTextOnGuiThread(tbStatus, value);
+            tbStatus.ForeColor = GetForeColorFor(type);
+        }
+
         public string Ping
         {
             get => tbPing.Text;
@@ -77,6 +101,18 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             set => SetTextOnGuiThread(tb15MinTrades, value);
         }
 
+        public string Trades1Hour
+        {
+            get => tb1HoursTrades.Text;
+            set => SetTextOnGuiThread(tb1HoursTrades, value);
+        }
+
+        public string Trades24Hours
+        {
+            get => tb24HoursTrades.Text;
+            set => SetTextOnGuiThread(tb24HoursTrades, value);
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             OnInit?.Invoke();
@@ -87,6 +123,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             OnStart?.Invoke();
             btnStart.Visible = false;
             btnStop.Visible = true;
+            tbPair.Visible = false;
+            tbSelectedPair.Text = tbPair.Text;
             btnStop.Focus();
         }
 
@@ -95,6 +133,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             OnStop?.Invoke();
             btnStart.Visible = true;
             btnStop.Visible = false;
+            tbPair.Visible = true;
+            tbSelectedPair.Text = string.Empty;
             btnStart.Focus();
         }
 
@@ -103,6 +143,19 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             if (side == Side.Buy)
                 return Color.GreenYellow;
             return Color.LightCoral;
+        }
+
+        private Color GetForeColorFor(StatusType type)
+        {
+            switch (type)
+            {
+                case StatusType.Error:
+                    return Color.IndianRed;
+                case StatusType.Warning:
+                    return Color.DarkOrange;
+                default:
+                    return Color.DarkSeaGreen;
+            }
         }
 
         private void SetTextOnGuiThread(TextBox tb, string value)

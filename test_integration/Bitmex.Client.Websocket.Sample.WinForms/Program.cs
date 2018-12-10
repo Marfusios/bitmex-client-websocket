@@ -35,7 +35,7 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.Console(LogEventLevel.Information)
+                //.WriteTo.Console(LogEventLevel.Information)
                 .WriteTo.Debug(LogEventLevel.Debug)
                 .CreateLogger();
         }

@@ -8,6 +8,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
         Action OnStart { set; }
         Action OnStop { set; }
 
+        string Pair { get; set; }
+
         string Bid { get; set; }
         string Ask { get; set; }
 
@@ -17,6 +19,10 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
         void Trades1Min(string value, Side side);
         void Trades5Min(string value, Side side);
         void Trades15Min(string value, Side side);
+        void Trades1Hour(string value, Side side);
+        void Trades24Hours(string value, Side side);
+
+        void Status(string value, StatusType type);
 
         string Ping { get; set; }
     }
@@ -25,5 +31,12 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
     {
         Buy,
         Sell
+    }
+
+    public enum StatusType
+    {
+        Info,
+        Warning,
+        Error
     }
 }

@@ -15,6 +15,7 @@ namespace Bitmex.Client.Websocket.Files
 
         public IObservable<string> MessageReceived => _messageReceivedSubject.AsObservable();
         public IObservable<ReconnectionType> ReconnectionHappened => Observable.Empty<ReconnectionType>();
+        public IObservable<DisconnectionType> DisconnectionHappened  => Observable.Empty<DisconnectionType>();
 
         public int ReconnectTimeoutMs { get; set; } = 60 * 1000;
         public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;

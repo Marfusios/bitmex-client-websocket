@@ -64,7 +64,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Websocket.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Websocket.Client.1.0.5\lib\netstandard2.0\Websocket.Client.dll</HintPath>
+      <HintPath>..\..\packages\Websocket.Client.1.0.6\lib\netstandard2.0\Websocket.Client.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

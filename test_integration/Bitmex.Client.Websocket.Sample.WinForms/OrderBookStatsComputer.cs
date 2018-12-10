@@ -60,7 +60,9 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
                 bids[0].Value.Price ?? 0,
                 asks[0].Value.Price ?? 0,
                 bidsPerc,
-                asksPerc
+                asksPerc,
+                bidAmounts,
+                askAmounts
                 );
         }
 
@@ -104,14 +106,17 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
 
     class OrderBookStats
     {
-        public static readonly OrderBookStats NULL = new OrderBookStats(0, 0, 0, 0);
+        public static readonly OrderBookStats NULL = new OrderBookStats(0, 0, 0, 0, 0, 0);
 
-        public OrderBookStats(double bid, double ask, double bidAmountPerc, double askAmountPerc)
+        public OrderBookStats(double bid, double ask, double bidAmountPerc, double askAmountPerc, 
+            double bidAmount, double askAmount)
         {
             Bid = bid;
             Ask = ask;
             BidAmountPerc = bidAmountPerc;
             AskAmountPerc = askAmountPerc;
+            BidAmount = bidAmount;
+            AskAmount = askAmount;
         }
 
         public double Bid { get; }
@@ -119,5 +124,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
 
         public double BidAmountPerc { get; }
         public double AskAmountPerc { get; }
+
+        public double BidAmount { get; }
+        public double AskAmount { get; }
     }
 }

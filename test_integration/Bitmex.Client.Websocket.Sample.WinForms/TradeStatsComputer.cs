@@ -37,23 +37,28 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             var buysPerc = buys / total * 100;
             var sellsPerc = sells / total * 100;
 
-            return new TradeStats(buysPerc, sellsPerc);
+            var count = trades.Length;
+
+            return new TradeStats(buysPerc, sellsPerc, count);
         }
     }
 
 
     class TradeStats
     {
-        public static readonly TradeStats NULL = new TradeStats(0, 0);
+        public static readonly TradeStats NULL = new TradeStats(0, 0, 0);
 
-        public TradeStats(double buysPerc, double sellsPerc)
+        public TradeStats(double buysPerc, double sellsPerc, int totalCount)
         {
             BuysPerc = buysPerc;
             SellsPerc = sellsPerc;
+            TotalCount = totalCount;
         }
 
         public double BuysPerc { get; }
         public double SellsPerc { get; }
+
+        public int TotalCount { get; }
     }
 
 }
