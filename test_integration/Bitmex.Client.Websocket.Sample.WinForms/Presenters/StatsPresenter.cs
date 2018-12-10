@@ -8,11 +8,13 @@ using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 using Bitmex.Client.Websocket.Responses.Trades;
+using Bitmex.Client.Websocket.Sample.WinForms.Statistics;
+using Bitmex.Client.Websocket.Sample.WinForms.Views;
 using Bitmex.Client.Websocket.Websockets;
 using Serilog;
 using Websocket.Client;
 
-namespace Bitmex.Client.Websocket.Sample.WinForms
+namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
 {
     class StatsPresenter
     {

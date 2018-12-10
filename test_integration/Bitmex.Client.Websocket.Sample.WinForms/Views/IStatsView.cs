@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bitmex.Client.Websocket.Sample.WinForms
+namespace Bitmex.Client.Websocket.Sample.WinForms.Views
 {
     public interface IStatsView
     {

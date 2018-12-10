@@ -4,7 +4,7 @@ using System.Linq;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Trades;
 
-namespace Bitmex.Client.Websocket.Sample.WinForms
+namespace Bitmex.Client.Websocket.Sample.WinForms.Statistics
 {
     class TradeStatsComputer
     {

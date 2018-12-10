@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 
-namespace Bitmex.Client.Websocket.Sample.WinForms
+namespace Bitmex.Client.Websocket.Sample.WinForms.Statistics
 {
     class OrderBookStatsComputer
     {

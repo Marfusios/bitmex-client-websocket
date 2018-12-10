@@ -1,4 +1,4 @@
-﻿namespace Bitmex.Client.Websocket.Sample.WinForms
+﻿namespace Bitmex.Client.Websocket.Sample.WinForms.Views
 {
     partial class Form1
     {
