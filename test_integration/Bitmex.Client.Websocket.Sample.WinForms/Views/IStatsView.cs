@@ -8,6 +8,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Views
         Action OnStart { set; }
         Action OnStop { set; }
 
+        bool IsTestNet { get; }
+
         string Pair { get; set; }
 
         string Bid { get; set; }

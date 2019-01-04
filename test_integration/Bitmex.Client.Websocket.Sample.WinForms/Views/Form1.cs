@@ -15,6 +15,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Views
         public Action OnStart { get; set; }
         public Action OnStop { get; set; }
 
+        public bool IsTestNet => cbTestNet.Checked;
+
         public string Pair
         {
             get => tbPair.Text;
@@ -124,7 +126,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Views
             btnStart.Visible = false;
             btnStop.Visible = true;
             tbPair.Visible = false;
-            tbSelectedPair.Text = tbPair.Text;
+            tbSelectedPair.Text = $"{tbPair.Text}" + (IsTestNet ? $" (TestNet)" : string.Empty);
+            cbTestNet.Visible = false;
             btnStop.Focus();
         }
 
@@ -135,6 +138,7 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Views
             btnStop.Visible = false;
             tbPair.Visible = true;
             tbSelectedPair.Text = string.Empty;
+            cbTestNet.Visible = true;
             btnStart.Focus();
         }
 

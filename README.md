@@ -48,6 +48,7 @@ using (var communicator = new BitmexWebsocketCommunicator(url))
 More usage examples:
 * integration tests ([link](test_integration/Bitmex.Client.Websocket.Tests.Integration))
 * console sample ([link](test_integration/Bitmex.Client.Websocket.Sample/Program.cs))
+* desktop sample ([link](test_integration/Bitmex.Client.Websocket.Sample.WinForms))
 
 ### API coverage
 

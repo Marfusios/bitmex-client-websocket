@@ -34,6 +34,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tb15MinTrades = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbTestNet = new System.Windows.Forms.CheckBox();
             this.tbPair = new System.Windows.Forms.TextBox();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
@@ -159,6 +160,7 @@
             // panel1
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.panel1, 7);
+            this.panel1.Controls.Add(this.cbTestNet);
             this.panel1.Controls.Add(this.tbPair);
             this.panel1.Controls.Add(this.btnStop);
             this.panel1.Controls.Add(this.btnStart);
@@ -168,6 +170,18 @@
             this.panel1.Size = new System.Drawing.Size(888, 34);
             this.panel1.TabIndex = 2;
             // 
+            // cbTestNet
+            // 
+            this.cbTestNet.AutoSize = true;
+            this.cbTestNet.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cbTestNet.Location = new System.Drawing.Point(244, 0);
+            this.cbTestNet.Name = "cbTestNet";
+            this.cbTestNet.Size = new System.Drawing.Size(64, 34);
+            this.cbTestNet.TabIndex = 7;
+            this.cbTestNet.Text = "TestNet";
+            this.cbTestNet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.cbTestNet.UseVisualStyleBackColor = true;
+            // 
             // tbPair
             // 
             this.tbPair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
@@ -176,6 +190,7 @@
             this.tbPair.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.tbPair.ForeColor = System.Drawing.SystemColors.Control;
             this.tbPair.Location = new System.Drawing.Point(150, 0);
+            this.tbPair.MinimumSize = new System.Drawing.Size(0, 40);
             this.tbPair.Name = "tbPair";
             this.tbPair.Size = new System.Drawing.Size(94, 22);
             this.tbPair.TabIndex = 6;
@@ -438,12 +453,12 @@
             this.tbSelectedPair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
             this.tbSelectedPair.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbSelectedPair.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tbSelectedPair.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.tbSelectedPair.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.tbSelectedPair.ForeColor = System.Drawing.SystemColors.Control;
             this.tbSelectedPair.Location = new System.Drawing.Point(410, 63);
             this.tbSelectedPair.Name = "tbSelectedPair";
             this.tbSelectedPair.ReadOnly = true;
-            this.tbSelectedPair.Size = new System.Drawing.Size(114, 16);
+            this.tbSelectedPair.Size = new System.Drawing.Size(114, 14);
             this.tbSelectedPair.TabIndex = 18;
             this.tbSelectedPair.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -548,6 +563,7 @@
         private System.Windows.Forms.TextBox tb1HoursTrades;
         private System.Windows.Forms.TextBox tb24HoursTrades;
         private System.Windows.Forms.TextBox tbStatus;
+        private System.Windows.Forms.CheckBox cbTestNet;
     }
 }
 

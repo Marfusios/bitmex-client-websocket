@@ -61,7 +61,9 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
             _tradeStatsComputer = new TradeStatsComputer();
             _orderBookStatsComputer = new OrderBookStatsComputer();
 
-            var url = BitmexValues.ApiWebsocketUrl;
+            var url = _view.IsTestNet ? 
+                BitmexValues.ApiWebsocketTestnetUrl :
+                BitmexValues.ApiWebsocketUrl;
             _communicator = new BitmexWebsocketCommunicator(url);
             _client = new BitmexWebsocketClient(_communicator);
 
