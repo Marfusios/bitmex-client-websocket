@@ -63,7 +63,7 @@ More usage examples:
 | Chat                   |                |
 | Connected              |                |
 | Funding                |                |
-| Instrument             |                |
+| Instrument             |  ✔            |
 | Insurance              |                |
 | Liquidation            |  ✔            |
 | Orderbook L2           |  ✔            |
