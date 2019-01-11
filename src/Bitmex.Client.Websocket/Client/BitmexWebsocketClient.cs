@@ -15,6 +15,7 @@ using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
 using Newtonsoft.Json.Linq;
 using Serilog;
+using Bitmex.Client.Websocket.Responses.Instruments;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -136,6 +137,7 @@ namespace Bitmex.Client.Websocket.Client
                 PositionResponse.TryHandle(response, Streams.PositionSubject) ||
                 OrderResponse.TryHandle(response, Streams.OrderSubject) ||
                 WalletResponse.TryHandle(response, Streams.WalletSubject) ||
+                InstrumentResponse.TryHandle(response, Streams.InstrumentSubject) ||
 
 
                 ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||

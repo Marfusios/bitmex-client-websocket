@@ -10,6 +10,7 @@ using Bitmex.Client.Websocket.Responses.Quotes;
 using Bitmex.Client.Websocket.Responses.Trades;
 using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
+using Bitmex.Client.Websocket.Responses.Instruments;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -26,6 +27,7 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
         internal readonly Subject<QuoteResponse> QuoteSubject = new Subject<QuoteResponse>();
         internal readonly Subject<LiquidationResponse> LiquidationSubject = new Subject<LiquidationResponse>();
+        internal readonly Subject<InstrumentResponse> InstrumentSubject = new Subject<InstrumentResponse>();
 
         internal readonly Subject<WalletResponse> WalletSubject = new Subject<WalletResponse>();
         internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
@@ -46,10 +48,14 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<LiquidationResponse> LiquidationStream => LiquidationSubject.AsObservable();
 
         /// <summary>
+        /// Stream of all Tradeable Contracts, Indices, and History
+        /// </summary>
+        public IObservable<InstrumentResponse> InstrumentStream => InstrumentSubject.AsObservable();
+
+        /// <summary>
         /// Stream for every wallet balance update
         /// </summary>
         public IObservable<WalletResponse> WalletStream => WalletSubject.AsObservable();
-
 
         /// <summary>
         /// Stream of all active orders

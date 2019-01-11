@@ -28,4 +28,7 @@
     <PackageReference Include="Websocket.Client" Version="1.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Responses\Instruments\" />
+  </ItemGroup>
 </Project>
