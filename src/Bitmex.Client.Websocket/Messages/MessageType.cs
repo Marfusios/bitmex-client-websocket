@@ -17,6 +17,7 @@
         Wallet,
         Order,
         Position,
-        Quote
+        Quote,
+        Instrument
     }
 }
