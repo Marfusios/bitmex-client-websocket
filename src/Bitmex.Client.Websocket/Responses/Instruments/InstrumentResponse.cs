@@ -8,6 +8,7 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 {
     public class InstrumentResponse : ResponseBase
     {
+        /// <inheritdoc />
         public override MessageType Op => MessageType.Instrument;
 
         public Instrument[] Data { get; set; }

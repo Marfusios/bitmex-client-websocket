@@ -48,7 +48,7 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<LiquidationResponse> LiquidationStream => LiquidationSubject.AsObservable();
 
         /// <summary>
-        /// Stream of all Tradeable Contracts, Indices, and History
+        /// Stream of all Trade-able Contracts, Indices, and History
         /// </summary>
         public IObservable<InstrumentResponse> InstrumentStream => InstrumentSubject.AsObservable();
 

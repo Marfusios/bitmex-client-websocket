@@ -3,6 +3,9 @@ using Bitmex.Client.Websocket.Messages;
 
 namespace Bitmex.Client.Websocket.Responses
 {
+    /// <summary>
+    /// Base message for every response
+    /// </summary>
     public class ResponseBase : MessageBase
     {
         /// <summary>

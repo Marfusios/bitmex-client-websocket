@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Bitmex.Client.Websocket.Responses.Instruments
 {
     /// <summary>
-    /// Tradeable Contracts, Indices, and History
+    /// Trade-able Contracts, Indices, and History
     /// </summary>
     [DebuggerDisplay("Instrument")]
     public class Instrument
@@ -254,7 +254,7 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
         public double? LastPriceProtected { get; set; }
 
         [JsonProperty("lastTickDirection")]
-        public InstrumentLastTickDirection LastTickDirection { get; set; }
+        public BitmexTickDirection LastTickDirection { get; set; }
 
         [JsonProperty("lastChangePcnt")]
         public double LastChangePercentage { get; set; }

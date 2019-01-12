@@ -11,6 +11,12 @@ namespace Bitmex.Client.Websocket.Json
         {
             try
             {
+                var val = reader.Value;
+                if (val is string valS && string.IsNullOrWhiteSpace(valS))
+                {
+                    // received empty string, can't parse to enum, use default enum value (first)
+                    return existingValue;
+                }
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
             catch

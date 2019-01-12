@@ -1,5 +1,9 @@
-﻿using System;
-namespace Bitmex.Client.Websocket.Responses.Instruments
+﻿namespace Bitmex.Client.Websocket.Responses.Instruments
 {
-    public enum InstrumentFairMethod { Empty, ImpactMidPrice };
+    public enum InstrumentFairMethod
+    {
+        Undefined, 
+        ImpactMidPrice,
+        FundingRate
+    }
 }
