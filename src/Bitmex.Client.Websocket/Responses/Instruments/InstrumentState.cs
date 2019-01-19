@@ -4,6 +4,7 @@
     {
         Undefined,
         Open,
-        Unlisted
+        Unlisted,
+        Closed
     }
 }
