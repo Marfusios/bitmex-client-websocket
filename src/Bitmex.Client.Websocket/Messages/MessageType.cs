@@ -18,6 +18,7 @@
         Order,
         Position,
         Quote,
-        Instrument
+        Instrument,
+        Margin,
     }
 }
