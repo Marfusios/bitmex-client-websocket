@@ -13,7 +13,7 @@ namespace Bitmex.Client.Websocket.Requests
         }
 
         /// <summary>
-        /// Subscribe toinstrument updates including turnover and bid/ask from selected pair ('XBTUSD', etc)
+        /// Subscribe to instrument updates including turnover and bid/ask from selected pair ('XBTUSD', etc)
         /// </summary>
         public InstrumentSubscribeRequest(string pair)
         {

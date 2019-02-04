@@ -19,6 +19,7 @@ namespace Bitmex.Client.Websocket.Files
 
         public int ReconnectTimeoutMs { get; set; } = 60 * 1000;
         public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;
+        public string Name { get; set; }
         public bool IsStarted { get; private set; }
         public bool IsRunning { get; private set; }
 

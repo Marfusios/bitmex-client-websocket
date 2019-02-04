@@ -1,12 +1,14 @@
 ﻿using System;
+using Bitmex.Client.Websocket.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Serilog;
 
 namespace Bitmex.Client.Websocket.Json
 {
     public class BitmexStringEnumConverter : StringEnumConverter
     {
+        private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             try
@@ -21,7 +23,7 @@ namespace Bitmex.Client.Websocket.Json
             }
             catch
             {
-                Log.Warning($"Can't parse enum, value: {reader.Value}, target type: {objectType}, using default '{existingValue}'");
+                Log.Warn($"Can't parse enum, value: {reader.Value}, target type: {objectType}, using default '{existingValue}'");
                 return existingValue;
             }
         }

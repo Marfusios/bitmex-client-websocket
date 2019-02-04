@@ -15,6 +15,10 @@ using Bitmex.Client.Websocket.Responses.Margins;
 
 namespace Bitmex.Client.Websocket.Client
 {
+    /// <summary>
+    /// All provided streams.
+    /// You need to send subscription request in advance (via method `Send()` on BitmexWebsocketClient)
+    /// </summary>
     public class BitmexClientStreams
     {
         internal readonly Subject<ErrorResponse> ErrorSubject = new Subject<ErrorResponse>();
@@ -36,17 +40,51 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
 
 
+        // PUBLIC
 
+        /// <summary>
+        /// Server errors stream
+        /// </summary>
         public IObservable<ErrorResponse> ErrorStream => ErrorSubject.AsObservable();
-        public IObservable<InfoResponse> InfoStream => InfoSubject.AsObservable();
-        public IObservable<PongResponse> PongStream => PongSubject.AsObservable();
-        public IObservable<SubscribeResponse> SubscribeStream => SubscribeSubject.AsObservable();
-        public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
 
+        /// <summary>
+        /// Info stream, sends initial information after reconnection
+        /// </summary>
+        public IObservable<InfoResponse> InfoStream => InfoSubject.AsObservable();
+
+        /// <summary>
+        /// Response stream to every ping request
+        /// </summary>
+        public IObservable<PongResponse> PongStream => PongSubject.AsObservable();
+
+        /// <summary>
+        /// Subscription info stream, emits status after sending subscription request
+        /// </summary>
+        public IObservable<SubscribeResponse> SubscribeStream => SubscribeSubject.AsObservable();
+
+        /// <summary>
+        /// Trades stream - emits every executed trade on Bitmex
+        /// </summary>
         public IObservable<TradeResponse> TradesStream => TradesSubject.AsObservable();
+
+        /// <summary>
+        /// Chunk of trades - emits grouped trades together
+        /// </summary>
         public IObservable<TradeBinResponse> TradeBinStream => TradeBinSubject.AsObservable();
+
+        /// <summary>
+        /// Order book stream - emits every update in the order book
+        /// </summary>
         public IObservable<BookResponse> BookStream => BookSubject.AsObservable();
+
+        /// <summary>
+        /// Quotes stream - emits on every change of top level of order book
+        /// </summary>
         public IObservable<QuoteResponse> QuoteStream => QuoteSubject.AsObservable();
+
+        /// <summary>
+        /// Liquidation stream - emits message whenever liquidation happens on Bitmex
+        /// </summary>
         public IObservable<LiquidationResponse> LiquidationStream => LiquidationSubject.AsObservable();
 
         /// <summary>
@@ -54,18 +92,27 @@ namespace Bitmex.Client.Websocket.Client
         /// </summary>
         public IObservable<InstrumentResponse> InstrumentStream => InstrumentSubject.AsObservable();
 
+
+
+        // PRIVATE
+
+        /// <summary>
+        /// Authentication info stream, emits status after sending authentication request
+        /// </summary>
+        public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
+
         /// <summary>
         /// Stream for every wallet balance update
         /// </summary>
         public IObservable<WalletResponse> WalletStream => WalletSubject.AsObservable();
 
         /// <summary>
-        /// Stream of all active orders
+        /// Stream of all your active orders
         /// </summary>
         public IObservable<OrderResponse> OrderStream => OrderSubject.AsObservable();
 
         /// <summary>
-        /// Stream of all active positions
+        /// Stream of all your active positions
         /// </summary>
         public IObservable<PositionResponse> PositionStream => PositionSubject.AsObservable();
 

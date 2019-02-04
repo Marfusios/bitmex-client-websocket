@@ -42,8 +42,8 @@ namespace Bitmex.Client.Websocket.Sample
             var url = BitmexValues.ApiWebsocketUrl;
             using (var communicator = new BitmexWebsocketCommunicator(url))
             {
+                communicator.Name = "Bitmex-1";
                 communicator.ReconnectTimeoutMs = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
-
                 communicator.ReconnectionHappened.Subscribe(type =>
                     Log.Information($"Reconnection happened, type: {type}"));
 
