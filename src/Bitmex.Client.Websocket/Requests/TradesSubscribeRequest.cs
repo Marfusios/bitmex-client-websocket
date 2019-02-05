@@ -2,6 +2,9 @@
 
 namespace Bitmex.Client.Websocket.Requests
 {
+    /// <summary>
+    /// Subscribe to trades stream
+    /// </summary>
     public class TradesSubscribeRequest : SubscribeRequestBase
     {
         /// <summary>
@@ -22,7 +25,12 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
+        /// <summary>
+        /// Trade topic
+        /// </summary>
         public override string Topic => "trade";
+
+        /// <inheritdoc />
         public override string Symbol { get; }
     }
 }

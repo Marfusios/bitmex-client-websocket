@@ -6,7 +6,7 @@
     public class MessageBase
     {
         /// <summary>
-        /// Operation identification of the message
+        /// Unique operation, is serialized as "op": "command"
         /// </summary>
         public virtual MessageType Op { get; set; }
     }

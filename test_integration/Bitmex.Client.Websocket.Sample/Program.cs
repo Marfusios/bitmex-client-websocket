@@ -73,7 +73,7 @@ namespace Bitmex.Client.Websocket.Sample
         private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
         {
             await client.Send(new PingRequest());
-            //await client.Send(new BookSubscribeRequest("XBTUSD"));
+            await client.Send(new BookSubscribeRequest("XBTUSD"));
             await client.Send(new TradesSubscribeRequest("XBTUSD"));
             //await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
             //await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
@@ -100,7 +100,11 @@ namespace Bitmex.Client.Websocket.Sample
 
 
             client.Streams.SubscribeStream.Subscribe(x =>
-                Log.Information($"Subscribed ({x.Success}) to {x.Subscribe}"));
+            {
+                Log.Information(x.IsSubscription
+                    ? $"Subscribed ({x.Success}) to {x.Subscribe}"
+                    : $"Unsubscribed ({x.Success}) from {x.Unsubscribe}");
+            });
 
             client.Streams.PongStream.Subscribe(x =>
                 Log.Information($"Pong received ({x.Message})"));
@@ -164,6 +168,15 @@ namespace Bitmex.Client.Websocket.Sample
                 });
             });
 
+
+            // example of unsubscribe requests
+            //Task.Run(async () =>
+            //{
+            //    await Task.Delay(5000);
+            //    await client.Send(new BookSubscribeRequest("XBTUSD") {IsUnsubscribe = true});
+            //    await Task.Delay(5000);
+            //    await client.Send(new TradesSubscribeRequest() {IsUnsubscribe = true});
+            //});
         }
 
         private static void InitLogging()

@@ -60,7 +60,7 @@ More usage examples:
 | Ping-Pong              |  ✔            |
 | Errors                 |  ✔            |
 | Subscribe              |  ✔            |
-| Unsubscribe            |                |
+| Unsubscribe            |  ✔            |
 | Announcement           |                |
 | Chat                   |                |
 | Connected              |                |

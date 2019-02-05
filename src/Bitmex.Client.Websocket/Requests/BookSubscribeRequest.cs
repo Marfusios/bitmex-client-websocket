@@ -2,7 +2,10 @@
 
 namespace Bitmex.Client.Websocket.Requests
 {
-    public class BookSubscribeRequest: SubscribeRequestBase
+    /// <summary>
+    /// Subscribe to order book stream
+    /// </summary>
+    public class BookSubscribeRequest : SubscribeRequestBase
     {
         /// <summary>
         /// Subscribe to order book from all pairs
@@ -22,7 +25,13 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
+        /// <summary>
+        /// Order book L2 topic
+        /// </summary>
         public override string Topic => "orderBookL2";
+
+
+        /// <inheritdoc />
         public override string Symbol { get; }       
     }
 }
