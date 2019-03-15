@@ -3,11 +3,25 @@ using System.Diagnostics;
 
 namespace Bitmex.Client.Websocket.Responses.Positions
 {
-    [DebuggerDisplay("Postion: {Symbol}, {Currency}. {LastPrice}, {CurrentQty}")]
+    /// <summary>
+    /// Information about your positions
+    /// </summary>
+    [DebuggerDisplay("Position: {Symbol}, {Currency}. {LastPrice}, {CurrentQty}")]
     public class Position
     {
+        /// <summary>
+        /// Account identification
+        /// </summary>
         public long Account { get; set; }
+
+        /// <summary>
+        /// Target symbol (XBT, ETH, etc)
+        /// </summary>
         public string Symbol {get; set; }
+
+        /// <summary>
+        /// Current `Amount` currency, for example `XBt` which is satoshi
+        /// </summary>
         public string Currency { get; set; }
 
         public string Underlying { get; set; }

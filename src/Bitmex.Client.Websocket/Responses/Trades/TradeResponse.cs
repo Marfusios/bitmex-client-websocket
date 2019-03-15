@@ -5,11 +5,21 @@ using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Trades
 {
+    /// <summary>
+    /// Trades response
+    /// </summary>
     public class TradeResponse : ResponseBase
     {
+        /// <summary>
+        /// Operation type
+        /// </summary>
         public override MessageType Op => MessageType.Trade;
 
+        /// <summary>
+        /// All latest trades
+        /// </summary>
         public Trade[] Data { get; set; }
+
 
         internal static bool TryHandle(JObject response, ISubject<TradeResponse> subject)
         {

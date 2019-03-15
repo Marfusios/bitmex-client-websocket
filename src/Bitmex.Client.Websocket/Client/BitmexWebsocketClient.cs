@@ -17,6 +17,7 @@ using Bitmex.Client.Websocket.Validations;
 using Newtonsoft.Json.Linq;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
+using Websocket.Client;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -92,12 +93,12 @@ namespace Bitmex.Client.Websocket.Client
             return $"[BMX WEBSOCKET CLIENT] {msg}";
         }
 
-        private void HandleMessage(string message)
+        private void HandleMessage(ResponseMessage message)
         {
             try
             {
                 bool handled;
-                var messageSafe = (message ?? string.Empty).Trim();
+                var messageSafe = (message.Text ?? string.Empty).Trim();
 
                 if (messageSafe.StartsWith("{"))
                 {
