@@ -29,8 +29,8 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
         private IDisposable _pingSubscription;
         private DateTime _pingRequest;
 
-        private string _defaultPair = "XBTUSD";
-        private string _currency = "$";
+        private readonly string _defaultPair = "XBTUSD";
+        private readonly string _currency = "$";
 
         public StatsPresenter(IStatsView view)
         {
