@@ -6,6 +6,7 @@
         New,
         Filled,
         PartiallyFilled,
-        Canceled
+        Canceled,
+        Rejected
     }
 }
