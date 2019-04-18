@@ -22,7 +22,7 @@ https://www.bitmex.com/app/wsAPI
 
 ```csharp
 var exitEvent = new ManualResetEvent(false);
-var url = Bitmex.ApiWebsocketUrl;
+var url = BitmexValues.ApiWebsocketUrl;
 
 using (var communicator = new BitmexWebsocketCommunicator(url))
 {
@@ -30,13 +30,13 @@ using (var communicator = new BitmexWebsocketCommunicator(url))
     {
         client.Streams.InfoStream.Subscribe(info =>
         {
-            Console.WriteLine($"Info received, reconnection happened.")
+            Console.WriteLine($"Info received, reconnection happened.");
             client.Send(new PingRequest()).Wait();
         });
 
         client.Streams.PongStream.Subscribe(pong =>
         {
-            Console.WriteLine($"Pong received!")
+            Console.WriteLine($"Pong received!");
             exitEvent.Set();
         });
 
