@@ -96,6 +96,34 @@ More usage examples:
 
 **Pull Requests are welcome!**
 
+### Other websocket libraries
+
+<table>
+<tr>
+
+<td>
+<a href="https://github.com/Marfusios/crypto-websocket-extensions"><img src="https://raw.githubusercontent.com/Marfusios/crypto-websocket-extensions/master/cwe_logo.png" height="80px"></a>
+<br />
+<a href="https://github.com/Marfusios/crypto-websocket-extensions">Extensions</a>
+<br />
+<span>All order books together, etc.</span>
+</td>
+
+<td>
+<a href="https://github.com/Marfusios/bitfinex-client-websocket"><img src="https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg"></a>
+<br />
+<a href="https://github.com/Marfusios/bitfinex-client-websocket">Bitfinex</a>
+</td>
+
+<td>
+<a href="https://github.com/Marfusios/binance-client-websocket"><img src="https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg"></a>
+<br />
+<a href="https://github.com/Marfusios/binance-client-websocket">Binance</a>
+</td>
+
+</tr>
+</table>
+
 ### Reconnecting
 
 There is a built-in reconnection which invokes after 1 minute (default) of not receiving any messages from the server. It is possible to configure that timeout via `communicator.ReconnectTimeoutMs`. Also, there is a stream `ReconnectionHappened` which sends information about a type of reconnection. However, if you are subscribed to low rate channels, it is very likely that you will encounter that timeout - higher the timeout to a few minutes or call `PingRequest` by your own every few seconds. 
@@ -203,7 +231,65 @@ client
 // ----- ----- code2 ----- code2 code2 ----
 ```
 
-#### Desktop application (WinForms or WPF)
+### Async/Await integration
+
+Using `async/await` in your subscribe methods is a bit tricky. Subscribe from Rx.NET doesn't `await` tasks, 
+so it won't block stream execution and cause sometimes undesired concurrency. For example: 
+
+```csharp
+client
+    .Streams
+    .TradesStream
+    .Subscribe(async trade => {
+        // do smth 1
+        await Task.Delay(5000); // waits 5 sec, could be HTTP call or something else
+        // do smth 2
+    });
+```
+
+That `await Task.Delay` won't block stream and subscribe method will be called multiple times concurrently. 
+If you want to buffer messages and process them one-by-one, then use this: 
+
+```csharp
+client
+    .Streams
+    .TradesStream
+    .Select(trade => Observable.FromAsync(async () => {
+        // do smth 1
+        await Task.Delay(5000); // waits 5 sec, could be HTTP call or something else
+        // do smth 2
+    }))
+    .Concat() // executes sequentially
+    .Subscribe();
+```
+
+If you want to process them concurrently (avoid synchronization), then use this
+
+```csharp
+client
+    .Streams
+    .TradesStream
+    .Select(trade => Observable.FromAsync(async () => {
+        // do smth 1
+        await Task.Delay(5000); // waits 5 sec, could be HTTP call or something else
+        // do smth 2
+    }))
+    .Merge() // executes concurrently
+    // .Merge(4) you can limit concurrency with a parameter
+    // .Merge(1) is same as .Concat()
+    // .Merge(0) is invalid (throws exception)
+    .Subscribe();
+```
+
+More info on [Github issue](https://github.com/dotnet/reactive/issues/459).
+
+Don't worry about websocket connection, those sequential execution via `.Concat()` or `.Merge(1)` has no effect on receiving messages. 
+It won't affect receiving thread, only buffers messages inside `TradesStream`. 
+
+But beware of [producer-consumer problem](https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem) when the consumer will be too slow. Here is a [StackOverflow issue](https://stackoverflow.com/questions/11010602/with-rx-how-do-i-ignore-all-except-the-latest-value-when-my-subscribe-method-is/15876519#15876519) 
+with an example how to ignore/discard buffered messages and always process only the last one. 
+
+### Desktop application (WinForms or WPF)
 
 Due to the large amount of questions about integration of this library into a desktop application (old full .NET Framework), I've prepared WinForms example ([link](test_integration/Bitmex.Client.Websocket.Sample.WinForms)). 
 
