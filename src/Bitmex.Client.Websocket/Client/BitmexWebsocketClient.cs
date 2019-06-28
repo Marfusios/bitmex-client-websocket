@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
 using Websocket.Client;
+using Bitmex.Client.Websocket.Responses.Executions;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -149,6 +150,7 @@ namespace Bitmex.Client.Websocket.Client
                 OrderResponse.TryHandle(response, Streams.OrderSubject) ||
                 WalletResponse.TryHandle(response, Streams.WalletSubject) ||
                 InstrumentResponse.TryHandle(response, Streams.InstrumentSubject) ||
+                ExecutionResponse.TryHandle(response, Streams.ExecutionSubject) ||
 
 
                 ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||

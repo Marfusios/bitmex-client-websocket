@@ -20,5 +20,6 @@
         Quote,
         Instrument,
         Margin,
+        Execution,
     }
 }

@@ -86,7 +86,7 @@ More usage examples:
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|
 | Affilate               |                |
-| Execution              |                |
+| Execution              |  ✔             |
 | Order                  |  ✔            |
 | Margin                 |  ✔            |
 | Position               |  ✔            |
