@@ -12,6 +12,7 @@ using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
+using Bitmex.Client.Websocket.Responses.Executions;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -38,6 +39,7 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
         internal readonly Subject<PositionResponse> PositionSubject = new Subject<PositionResponse>();
         internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
+        internal readonly Subject<ExecutionResponse> ExecutionSubject = new Subject<ExecutionResponse>();
 
 
         // PUBLIC
@@ -120,5 +122,10 @@ namespace Bitmex.Client.Websocket.Client
         /// Stream of updates on your current account balance and margin requirements
         /// </summary>
         public IObservable<MarginResponse> MarginStream => MarginSubject.AsObservable();
+
+        /// <summary>
+        /// Stream of all raw transactions, which includes order opening and cancelation, and order status changes
+        /// </summary>
+        public IObservable<ExecutionResponse> ExecutionStream => ExecutionSubject.AsObservable();
     }
 }
