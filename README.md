@@ -121,6 +121,12 @@ More usage examples:
 <a href="https://github.com/Marfusios/binance-client-websocket">Binance</a>
 </td>
 
+<td>
+<a href="https://github.com/Marfusios/coinbase-client-websocket"><img src="https://user-images.githubusercontent.com/1294454/41764625-63b7ffde-760a-11e8-996d-a6328fa9347a.jpg"></a>
+<br />
+<a href="https://github.com/Marfusios/coinbase-client-websocket">Coinbase</a>
+</td>
+
 </tr>
 </table>
 

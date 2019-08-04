@@ -73,11 +73,11 @@ namespace Bitmex.Client.Websocket.Sample
         private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
         {
             await client.Send(new PingRequest());
-            await client.Send(new BookSubscribeRequest("XBTUSD"));
+            //await client.Send(new BookSubscribeRequest("XBTUSD"));
             await client.Send(new TradesSubscribeRequest("XBTUSD"));
             //await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
             //await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
-            //await client.Send(new QuoteSubscribeRequest("XBTUSD"));
+            await client.Send(new QuoteSubscribeRequest("XBTUSD"));
             //await client.Send(new LiquidationSubscribeRequest());
             //await client.Send(new InstrumentSubscribeRequest("XBTUSD"));
 
