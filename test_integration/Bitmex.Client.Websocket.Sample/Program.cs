@@ -80,6 +80,7 @@ namespace Bitmex.Client.Websocket.Sample
             await client.Send(new QuoteSubscribeRequest("XBTUSD"));
             //await client.Send(new LiquidationSubscribeRequest());
             //await client.Send(new InstrumentSubscribeRequest("XBTUSD"));
+            //await client.Send(new FundingsSubscribeRequest("XBTUSD"));
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
                 await client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -131,7 +132,7 @@ namespace Bitmex.Client.Websocket.Sample
 
             client.Streams.TradesStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
-                    Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, [{x.Side}] Amount: {x.Size}, " +
+                    Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:HH:mm:ss.fff}, [{x.Side}] Amount: {x.Size}, " +
                                     $"Price: {x.Price}"))
             );
 
@@ -165,6 +166,15 @@ namespace Bitmex.Client.Websocket.Sample
                                     $"price: {y.MarkPrice}, last: {y.LastPrice}, " +
                                     $"mark: {y.MarkMethod}, fair: {y.FairMethod}, direction: {y.LastTickDirection}, " +
                                     $"funding: {y.FundingRate} i: {y.IndicativeFundingRate} s: {y.FundingQuoteSymbol}");
+                });
+            });
+
+            client.Streams.FundingStream.Subscribe(x =>
+            {
+                x.Data.ToList().ForEach(f =>
+                {
+                    Log.Information($"Funding {f.Symbol}, Timestamp: {f.Timestamp}, Interval: {f.FundingInterval}, " +
+                                    $"Rate: {f.FundingRate}, RateDaily: {f.FundingRateDaily}");
                 });
             });
 
