@@ -21,5 +21,6 @@
         Instrument,
         Margin,
         Execution,
+        Funding
     }
 }

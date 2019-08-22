@@ -19,6 +19,7 @@ using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
 using Websocket.Client;
 using Bitmex.Client.Websocket.Responses.Executions;
+using Bitmex.Client.Websocket.Responses.Fundings;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -151,7 +152,7 @@ namespace Bitmex.Client.Websocket.Client
                 WalletResponse.TryHandle(response, Streams.WalletSubject) ||
                 InstrumentResponse.TryHandle(response, Streams.InstrumentSubject) ||
                 ExecutionResponse.TryHandle(response, Streams.ExecutionSubject) ||
-
+                FundingResponse.TryHandle(response, Streams.FundingsSubject) ||
 
                 ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
                 SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
