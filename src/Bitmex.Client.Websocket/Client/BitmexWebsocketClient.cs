@@ -139,7 +139,6 @@ namespace Bitmex.Client.Websocket.Client
             // ********************
 
             return
-
                 TradeResponse.TryHandle(response, Streams.TradesSubject) ||
                 TradeBinResponse.TryHandle(response, Streams.TradeBinSubject) ||
                 BookResponse.TryHandle(response, Streams.BookSubject) ||

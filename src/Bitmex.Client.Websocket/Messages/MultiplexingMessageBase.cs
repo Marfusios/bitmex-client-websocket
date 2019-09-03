@@ -1,17 +1,16 @@
-﻿using System;
-using Bitmex.Client.Websocket.Requests;
+﻿using Bitmex.Client.Websocket.Requests;
 
 namespace Bitmex.Client.Websocket.Messages
 {
     /// <summary>
-    /// Base class for TODO
+    /// Base class for a message using a multiplexing socket.
     /// </summary>
     public class MultiplexingMessageBase
     {
         /// <summary>
-        /// Gets or sets the channel.
+        /// Gets or sets the type of the message.
         /// </summary>
-        public BitmexWebsocketChannel Channel { get; set; }
+        public MultiplexingMessageType MessageType { get; set; }
 
         /// <summary>
         /// Gets or sets the payload.

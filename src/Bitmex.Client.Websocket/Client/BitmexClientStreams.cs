@@ -16,6 +16,8 @@ using Bitmex.Client.Websocket.Responses.Executions;
 
 namespace Bitmex.Client.Websocket.Client
 {
+    using Messages;
+
     /// <summary>
     /// All provided streams.
     /// You need to send subscription request in advance (via method `Send()` on BitmexWebsocketClient)
@@ -40,7 +42,6 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<PositionResponse> PositionSubject = new Subject<PositionResponse>();
         internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
         internal readonly Subject<ExecutionResponse> ExecutionSubject = new Subject<ExecutionResponse>();
-
 
         // PUBLIC
 
