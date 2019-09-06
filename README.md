@@ -64,7 +64,7 @@ More usage examples:
 | Announcement           |                |
 | Chat                   |                |
 | Connected              |                |
-| Funding                |                |
+| Funding                |  ✔            |
 | Instrument             |  ✔            |
 | Insurance              |                |
 | Liquidation            |  ✔            |
