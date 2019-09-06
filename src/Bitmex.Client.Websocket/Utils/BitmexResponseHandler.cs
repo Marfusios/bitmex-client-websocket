@@ -3,6 +3,7 @@ using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 using Bitmex.Client.Websocket.Responses.Executions;
+using Bitmex.Client.Websocket.Responses.Fundings;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Liquidation;
 using Bitmex.Client.Websocket.Responses.Margins;
@@ -60,6 +61,7 @@ namespace Bitmex.Client.Websocket.Utils
                 WalletResponse.TryHandle(response, streams.WalletSubject) ||
                 InstrumentResponse.TryHandle(response, streams.InstrumentSubject) ||
                 ExecutionResponse.TryHandle(response, streams.ExecutionSubject) ||
+                FundingResponse.TryHandle(response, streams.FundingsSubject) ||
 
 
                 ErrorResponse.TryHandle(response, streams.ErrorSubject) ||

@@ -13,6 +13,7 @@ using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
 using Bitmex.Client.Websocket.Responses.Executions;
+using Bitmex.Client.Websocket.Responses.Fundings;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -34,6 +35,7 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<QuoteResponse> QuoteSubject = new Subject<QuoteResponse>();
         internal readonly Subject<LiquidationResponse> LiquidationSubject = new Subject<LiquidationResponse>();
         internal readonly Subject<InstrumentResponse> InstrumentSubject = new Subject<InstrumentResponse>();
+        internal readonly Subject<FundingResponse> FundingsSubject = new Subject<FundingResponse>();
 
         internal readonly Subject<WalletResponse> WalletSubject = new Subject<WalletResponse>();
         internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
@@ -92,6 +94,12 @@ namespace Bitmex.Client.Websocket.Client
         /// Stream of all Trade-able Contracts, Indices, and History
         /// </summary>
         public IObservable<InstrumentResponse> InstrumentStream => InstrumentSubject.AsObservable();
+
+        /// <summary>
+        /// Fundings stream - updates of swap funding rates. Sent every funding interval (usually 8hrs) 
+        /// <para>!!! Any time you connect to the stream, you receive the latest active funding rate</para>
+        /// </summary>
+        public IObservable<FundingResponse> FundingStream => FundingsSubject.AsObservable();
 
 
 

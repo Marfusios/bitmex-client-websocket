@@ -11,7 +11,7 @@ namespace Bitmex.Client.Websocket.Sample
     class Program
     {
         private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
-        private static readonly bool UseMultiplexClient = true;
+        private static readonly bool UseMultiplexClient = false;
 
         static void Main(string[] args)
         {

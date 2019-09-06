@@ -67,6 +67,7 @@ namespace Bitmex.Client.Websocket.Sample
             await client.Send(new QuoteSubscribeRequest("XBTUSD"));
             //await client.Send(new LiquidationSubscribeRequest());
             //await client.Send(new InstrumentSubscribeRequest("XBTUSD"));
+            //await client.Send(new FundingsSubscribeRequest("XBTUSD"));
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
                 await client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -155,6 +156,14 @@ namespace Bitmex.Client.Websocket.Sample
                 });
             });
 
+            client.Streams.FundingStream.Subscribe(x =>
+            {
+                x.Data.ToList().ForEach(f =>
+                {
+                    Log.Information($"Funding {f.Symbol}, Timestamp: {f.Timestamp}, Interval: {f.FundingInterval}, " +
+                                    $"Rate: {f.FundingRate}, RateDaily: {f.FundingRateDaily}");
+                });
+            });
 
             // example of unsubscribe requests
             //Task.Run(async () =>
