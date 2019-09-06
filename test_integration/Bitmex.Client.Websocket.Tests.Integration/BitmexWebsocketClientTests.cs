@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Client;
-using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Websockets;

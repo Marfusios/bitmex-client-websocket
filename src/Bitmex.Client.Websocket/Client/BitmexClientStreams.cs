@@ -16,8 +16,6 @@ using Bitmex.Client.Websocket.Responses.Executions;
 
 namespace Bitmex.Client.Websocket.Client
 {
-    using Messages;
-
     /// <summary>
     /// All provided streams.
     /// You need to send subscription request in advance (via method `Send()` on BitmexWebsocketClient)
