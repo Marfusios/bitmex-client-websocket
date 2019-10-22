@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Bitmex.Client.Websocket.Utils;
+﻿using System.Diagnostics;
 
 namespace Bitmex.Client.Websocket.Responses.Liquidation
 {

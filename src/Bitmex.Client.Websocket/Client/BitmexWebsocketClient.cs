@@ -4,22 +4,9 @@ using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Logging;
 using Bitmex.Client.Websocket.Requests;
-using Bitmex.Client.Websocket.Responses;
-using Bitmex.Client.Websocket.Responses.Books;
-using Bitmex.Client.Websocket.Responses.Liquidation;
-using Bitmex.Client.Websocket.Responses.Orders;
-using Bitmex.Client.Websocket.Responses.Positions;
-using Bitmex.Client.Websocket.Responses.Quotes;
-using Bitmex.Client.Websocket.Responses.Trades;
-using Bitmex.Client.Websocket.Responses.TradeBins;
-using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
-using Newtonsoft.Json.Linq;
-using Bitmex.Client.Websocket.Responses.Instruments;
-using Bitmex.Client.Websocket.Responses.Margins;
 using Websocket.Client;
-using Bitmex.Client.Websocket.Responses.Executions;
-using Bitmex.Client.Websocket.Responses.Fundings;
+using Bitmex.Client.Websocket.Utils;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -104,12 +91,12 @@ namespace Bitmex.Client.Websocket.Client
 
                 if (messageSafe.StartsWith("{"))
                 {
-                    handled = HandleObjectMessage(messageSafe);
+                    handled = BitmexResponseHandler.HandleObjectMessage(messageSafe, Streams);
                     if (handled)
                         return;
                 }
 
-                handled = HandleRawMessage(messageSafe);
+                handled = BitmexResponseHandler.HandleRawMessage(messageSafe, Streams);
                 if (handled)
                     return;
 
@@ -119,45 +106,6 @@ namespace Bitmex.Client.Websocket.Client
             {
                 Log.Error(e, L("Exception while receiving message"));
             }
-        }
-
-        private bool HandleRawMessage(string msg)
-        {
-            // ********************
-            // ADD RAW HANDLERS BELOW
-            // ********************
-
-            return
-                PongResponse.TryHandle(msg, Streams.PongSubject);
-        }
-
-        private bool HandleObjectMessage(string msg)
-        {
-            var response = BitmexJsonSerializer.Deserialize<JObject>(msg);
-
-            // ********************
-            // ADD OBJECT HANDLERS BELOW
-            // ********************
-
-            return
-
-                TradeResponse.TryHandle(response, Streams.TradesSubject) ||
-                TradeBinResponse.TryHandle(response, Streams.TradeBinSubject) ||
-                BookResponse.TryHandle(response, Streams.BookSubject) ||
-                QuoteResponse.TryHandle(response, Streams.QuoteSubject) ||
-                LiquidationResponse.TryHandle(response, Streams.LiquidationSubject) ||
-                PositionResponse.TryHandle(response, Streams.PositionSubject) ||
-                MarginResponse.TryHandle(response, Streams.MarginSubject) ||
-                OrderResponse.TryHandle(response, Streams.OrderSubject) ||
-                WalletResponse.TryHandle(response, Streams.WalletSubject) ||
-                InstrumentResponse.TryHandle(response, Streams.InstrumentSubject) ||
-                ExecutionResponse.TryHandle(response, Streams.ExecutionSubject) ||
-                FundingResponse.TryHandle(response, Streams.FundingsSubject) ||
-
-                ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
-                SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
-                InfoResponse.TryHandle(response, Streams.InfoSubject) ||
-                AuthenticationResponse.TryHandle(response, Streams.AuthenticationSubject);
         }
     }
 }

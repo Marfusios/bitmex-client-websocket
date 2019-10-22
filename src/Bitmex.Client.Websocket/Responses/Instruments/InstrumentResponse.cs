@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reactive.Subjects;
+﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
 using Newtonsoft.Json.Linq;

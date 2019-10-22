@@ -43,7 +43,6 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
         internal readonly Subject<ExecutionResponse> ExecutionSubject = new Subject<ExecutionResponse>();
 
-
         // PUBLIC
 
         /// <summary>
