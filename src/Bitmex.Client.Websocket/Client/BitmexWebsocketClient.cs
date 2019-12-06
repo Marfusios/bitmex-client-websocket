@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Logging;
@@ -62,7 +61,7 @@ namespace Bitmex.Client.Websocket.Client
         /// It logs and re-throws every exception. 
         /// </summary>
         /// <param name="request">Request/message to be sent</param>
-        public async Task Send<T>(T request) where T: RequestBase
+        public void Send<T>(T request) where T: RequestBase
         {
             try
             {
@@ -71,7 +70,7 @@ namespace Bitmex.Client.Websocket.Client
                 var serialized = request.IsRaw ? 
                     request.OperationString :
                     BitmexJsonSerializer.Serialize(request);
-                await _communicator.Send(serialized).ConfigureAwait(false);
+                _communicator.Send(serialized);
             }
             catch (Exception e)
             {
@@ -85,9 +84,9 @@ namespace Bitmex.Client.Websocket.Client
         /// </summary>
         /// <param name="apiKey">Your API key</param>
         /// <param name="apiSecret">Your API secret</param>
-        public Task Authenticate(string apiKey, string apiSecret)
+        public void Authenticate(string apiKey, string apiSecret)
         {
-            return Send(new AuthenticationRequest(apiKey, apiSecret));
+            Send(new AuthenticationRequest(apiKey, apiSecret));
         }
 
         private string L(string msg)

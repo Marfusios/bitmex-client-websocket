@@ -43,7 +43,7 @@ namespace Bitmex.Client.Websocket.Sample
             using (var communicator = new BitmexWebsocketCommunicator(url))
             {
                 communicator.Name = "Bitmex-1";
-                communicator.ReconnectTimeoutMs = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
+                communicator.ReconnectTimeout = TimeSpan.FromMinutes(10);
                 communicator.ReconnectionHappened.Subscribe(type =>
                     Log.Information($"Reconnection happened, type: {type}"));
 
@@ -72,18 +72,18 @@ namespace Bitmex.Client.Websocket.Sample
 
         private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
         {
-            await client.Send(new PingRequest());
-            //await client.Send(new BookSubscribeRequest("XBTUSD"));
-            await client.Send(new TradesSubscribeRequest("XBTUSD"));
-            //await client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
-            //await client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
-            await client.Send(new QuoteSubscribeRequest("XBTUSD"));
-            //await client.Send(new LiquidationSubscribeRequest());
-            //await client.Send(new InstrumentSubscribeRequest("XBTUSD"));
-            //await client.Send(new FundingsSubscribeRequest("XBTUSD"));
+            client.Send(new PingRequest());
+            //client.Send(new BookSubscribeRequest("XBTUSD"));
+            client.Send(new TradesSubscribeRequest("XBTUSD"));
+            //client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
+            //client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
+            client.Send(new QuoteSubscribeRequest("XBTUSD"));
+            //client.Send(new LiquidationSubscribeRequest());
+            //client.Send(new InstrumentSubscribeRequest("XBTUSD"));
+            //client.Send(new FundingsSubscribeRequest("XBTUSD"));
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
-                await client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+                client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
         }
 
         private static void SubscribeToStreams(BitmexWebsocketClient client)
@@ -94,9 +94,9 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.AuthenticationStream.Subscribe(x =>
             {
                 Log.Information($"Authentication happened, success: {x.Success}");
-                client.Send(new WalletSubscribeRequest()).Wait();
-                client.Send(new OrderSubscribeRequest()).Wait();
-                client.Send(new PositionSubscribeRequest()).Wait();
+                client.Send(new WalletSubscribeRequest());
+                client.Send(new OrderSubscribeRequest());
+                client.Send(new PositionSubscribeRequest());
             });
 
 
@@ -149,7 +149,7 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.LiquidationStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
                     Log.Information(
-                        $"Liquadation Action: {y.Action}, OrderID: {x.OrderID}, Symbol: {x.Symbol}, Side: {x.Side}, Price: {x.Price}, LeavesQty: {x.leavesQty}"))
+                        $"Liquidation Action: {y.Action}, OrderID: {x.OrderID}, Symbol: {x.Symbol}, Side: {x.Side}, Price: {x.Price}, LeavesQty: {x.leavesQty}"))
             );
 
             client.Streams.TradeBinStream.Subscribe(y =>

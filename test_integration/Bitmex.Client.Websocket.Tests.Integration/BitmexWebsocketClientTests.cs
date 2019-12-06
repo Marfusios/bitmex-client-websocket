@@ -35,7 +35,7 @@ namespace Bitmex.Client.Websocket.Tests.Integration
 
                     await communicator.Start();
 
-                    await client.Send(new PingRequest());
+                    client.Send(new PingRequest());
 
                     receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
@@ -66,7 +66,7 @@ namespace Bitmex.Client.Websocket.Tests.Integration
 
                     await communicator.Start();
 
-                    await client.Authenticate(API_KEY, API_SECRET);
+                    client.Authenticate(API_KEY, API_SECRET);
 
                     receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 

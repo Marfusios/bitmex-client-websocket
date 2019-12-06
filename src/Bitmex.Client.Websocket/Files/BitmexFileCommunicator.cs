@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Communicator;
 using Websocket.Client;
+using Websocket.Client.Models;
 
 namespace Bitmex.Client.Websocket.Files
 {
@@ -18,11 +19,11 @@ namespace Bitmex.Client.Websocket.Files
         private readonly Subject<ResponseMessage> _messageReceivedSubject = new Subject<ResponseMessage>();
 
         public IObservable<ResponseMessage> MessageReceived => _messageReceivedSubject.AsObservable();
-        public IObservable<ReconnectionType> ReconnectionHappened => Observable.Empty<ReconnectionType>();
-        public IObservable<DisconnectionType> DisconnectionHappened  => Observable.Empty<DisconnectionType>();
+        public IObservable<ReconnectionInfo> ReconnectionHappened => Observable.Empty<ReconnectionInfo>();
+        public IObservable<DisconnectionInfo> DisconnectionHappened  => Observable.Empty<DisconnectionInfo>();
 
-        public int ReconnectTimeoutMs { get; set; } = 60 * 1000;
-        public int ErrorReconnectTimeoutMs { get; set; } = 60 * 1000;
+        public TimeSpan? ReconnectTimeout { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan? ErrorReconnectTimeout { get; set; } = TimeSpan.FromSeconds(60);
         public string Name { get; set; }
         public bool IsStarted { get; private set; }
         public bool IsRunning { get; private set; }
@@ -46,19 +47,27 @@ namespace Bitmex.Client.Websocket.Files
             return Task.CompletedTask;
         }
 
+        public Task StartOrFail()
+        {
+            return Task.CompletedTask;
+        }
+
         public Task<bool> Stop(WebSocketCloseStatus status, string statusDescription)
         {
             return Task.FromResult(true);
         }
 
-        public virtual Task Send(string message)
+        public Task<bool> StopOrFail(WebSocketCloseStatus status, string statusDescription)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
-        public Task Send(byte[] message)
+        public virtual void Send(string message)
         {
-            return Task.CompletedTask;
+        }
+
+        public void Send(byte[] message)
+        {
         }
 
         public virtual Task SendInstant(string message)
@@ -74,6 +83,16 @@ namespace Bitmex.Client.Websocket.Files
         public Task Reconnect()
         {
             return Task.CompletedTask;
+        }
+
+        public Task ReconnectOrFail()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StreamFakeMessage(ResponseMessage message)
+        {
+            throw new NotImplementedException();
         }
 
         public Uri Url { get; set; }
