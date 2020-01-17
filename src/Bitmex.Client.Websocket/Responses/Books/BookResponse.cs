@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Books
 {
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Books
 
         public BookLevel[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<BookResponse> subject)
+        internal static bool TryHandle(string response, ISubject<BookResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "orderBookL2")
+            if (!BitmexJsonSerializer.ContainsValue(response, "orderBookL2"))
                 return false;
 
-            var parsed = response.ToObject<BookResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<BookResponse>(response);
             subject.OnNext(parsed);
 
             return true;

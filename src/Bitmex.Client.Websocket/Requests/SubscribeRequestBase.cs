@@ -1,5 +1,5 @@
-﻿using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+using Bitmex.Client.Websocket.Messages;
 
 namespace Bitmex.Client.Websocket.Requests
 {
@@ -9,6 +9,7 @@ namespace Bitmex.Client.Websocket.Requests
     public abstract class SubscribeRequestBase : RequestBase
     {
         /// <inheritdoc />
+        [IgnoreDataMember]
         public override MessageType Operation => !IsUnsubscribe ? MessageType.Subscribe : MessageType.Unsubscribe;
 
         /// <summary>
@@ -22,19 +23,19 @@ namespace Bitmex.Client.Websocket.Requests
         /// <summary>
         /// Target subscription topic
         /// </summary>
-        [JsonIgnore]
+        [IgnoreDataMember]
         public abstract string Topic { get; }
 
         /// <summary>
         /// Target subscription pair (could be null, then it will subscribe to everything)
         /// </summary>
-        [JsonIgnore]
+        [IgnoreDataMember]
         public virtual string Symbol { get; } = string.Empty;
 
         /// <summary>
         /// Set true if you want to unsubscribe from the stream
         /// </summary>
-        [JsonIgnore]
+        [IgnoreDataMember]
         public bool IsUnsubscribe { get; set; }
     }
 }

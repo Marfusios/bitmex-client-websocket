@@ -2,7 +2,6 @@
 using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Instruments
 {
@@ -13,12 +12,12 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public Instrument[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<InstrumentResponse> subject)
+        internal static bool TryHandle(string response, ISubject<InstrumentResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "instrument")
+            if (!BitmexJsonSerializer.ContainsValue(response, "instrument"))
                 return false;
 
-            var parsed = response.ToObject<InstrumentResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<InstrumentResponse>(response);
             subject.OnNext(parsed);
 
             return true;

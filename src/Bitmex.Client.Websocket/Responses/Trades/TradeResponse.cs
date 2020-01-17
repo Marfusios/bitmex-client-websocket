@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Trades
 {
@@ -21,12 +20,12 @@ namespace Bitmex.Client.Websocket.Responses.Trades
         public Trade[] Data { get; set; }
 
 
-        internal static bool TryHandle(JObject response, ISubject<TradeResponse> subject)
+        internal static bool TryHandle(string response, ISubject<TradeResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "trade")
+            if (!BitmexJsonSerializer.ContainsValue(response, "trade"))
                 return false;
 
-            var parsed = response.ToObject<TradeResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<TradeResponse>(response);
             subject.OnNext(parsed);
 
             return true;

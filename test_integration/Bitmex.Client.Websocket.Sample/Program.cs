@@ -17,7 +17,7 @@ namespace Bitmex.Client.Websocket.Sample
     {
         private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
 
-        private static readonly string API_KEY = "your api key";
+        private static readonly string API_KEY = "your_api_key";
         private static readonly string API_SECRET = "";
 
         static void Main(string[] args)
@@ -77,10 +77,10 @@ namespace Bitmex.Client.Websocket.Sample
             client.Send(new TradesSubscribeRequest("XBTUSD"));
             //client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
             //client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
-            client.Send(new QuoteSubscribeRequest("XBTUSD"));
-            //client.Send(new LiquidationSubscribeRequest());
+            //client.Send(new QuoteSubscribeRequest("XBTUSD"));
+            client.Send(new LiquidationSubscribeRequest());
             //client.Send(new InstrumentSubscribeRequest("XBTUSD"));
-            //client.Send(new FundingsSubscribeRequest("XBTUSD"));
+            client.Send(new FundingsSubscribeRequest("XBTUSD"));
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
                 client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -127,7 +127,8 @@ namespace Bitmex.Client.Websocket.Sample
                 y.Data.ToList().ForEach(x =>
                     Log.Information(
                         $"Position {x.Symbol}, {x.Currency} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.CurrentQty}, " +
-                        $"Price: {x.LastPrice}, PNL: {x.UnrealisedPnl}"))
+                        $"Entry: {x.AvgEntryPrice}, Price: {x.LastPrice}, Liq: {x.LiquidationPrice}, " +
+                        $"PNL: {x.UnrealisedPnl}"))
             );
 
             client.Streams.TradesStream.Subscribe(y =>
@@ -183,9 +184,9 @@ namespace Bitmex.Client.Websocket.Sample
             //Task.Run(async () =>
             //{
             //    await Task.Delay(5000);
-            //    await client.Send(new BookSubscribeRequest("XBTUSD") {IsUnsubscribe = true});
+            //    client.Send(new BookSubscribeRequest("XBTUSD") { IsUnsubscribe = true });
             //    await Task.Delay(5000);
-            //    await client.Send(new TradesSubscribeRequest() {IsUnsubscribe = true});
+            //    client.Send(new TradesSubscribeRequest() { IsUnsubscribe = true });
             //});
         }
 

@@ -1,4 +1,5 @@
-﻿using Bitmex.Client.Websocket.Messages;
+﻿using System.Runtime.Serialization;
+using Bitmex.Client.Websocket.Messages;
 using Bitmex.Client.Websocket.Utils;
 using Bitmex.Client.Websocket.Validations;
 
@@ -24,6 +25,7 @@ namespace Bitmex.Client.Websocket.Requests
             _authSig = BitmexAuthentication.CreateSignature(apiSecret, _authPayload);
         }
 
+        [IgnoreDataMember]
         public override MessageType Operation => MessageType.AuthKey;
 
         public object[] Args => new object[]

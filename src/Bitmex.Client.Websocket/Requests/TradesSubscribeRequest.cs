@@ -1,4 +1,5 @@
-﻿using Bitmex.Client.Websocket.Validations;
+﻿using System.Runtime.Serialization;
+using Bitmex.Client.Websocket.Validations;
 
 namespace Bitmex.Client.Websocket.Requests
 {
@@ -28,9 +29,11 @@ namespace Bitmex.Client.Websocket.Requests
         /// <summary>
         /// Trade topic
         /// </summary>
+        [IgnoreDataMember]
         public override string Topic => "trade";
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public override string Symbol { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace Bitmex.Client.Websocket.Responses.Orders
 
         public long? Account { get; set; }
         public string Symbol { get; set; }
-        public BitmexSide? Side { get; set; }
+        public BitmexSide Side { get; set; }
 
         public double? SimpleOrderQty { get; set; }
         public long? OrderQty {get; set; }

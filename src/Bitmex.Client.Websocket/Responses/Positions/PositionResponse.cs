@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Positions
 {
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Positions
 
         public Position[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<PositionResponse> subject)
+        internal static bool TryHandle(string response, ISubject<PositionResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "position")
+            if (!BitmexJsonSerializer.ContainsValue(response, "position"))
                 return false;
 
-            var parsed = response.ToObject<PositionResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<PositionResponse>(response);
             subject.OnNext(parsed);
 
             return true;

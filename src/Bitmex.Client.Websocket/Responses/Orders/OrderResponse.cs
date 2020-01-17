@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Orders
 {
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Orders
 
         public Order[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<OrderResponse> subject)
+        internal static bool TryHandle(string response, ISubject<OrderResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "order")
+            if (!BitmexJsonSerializer.ContainsValue(response, "order"))
                 return false;
 
-            var parsed = response.ToObject<OrderResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<OrderResponse>(response);
             subject.OnNext(parsed);
 
             return true;

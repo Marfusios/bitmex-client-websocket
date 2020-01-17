@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Liquidation
 {
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Liquidation
 
         public Liquidation[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<LiquidationResponse> subject)
+        internal static bool TryHandle(string response, ISubject<LiquidationResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "liquidation")
+            if (!BitmexJsonSerializer.ContainsValue(response, "liquidation"))
                 return false;
 
-            var parsed = response.ToObject<LiquidationResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<LiquidationResponse>(response);
             subject.OnNext(parsed);
 
             return true;

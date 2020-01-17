@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.Wallets
 {
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Wallets
 
         public Wallet[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<WalletResponse> subject)
+        internal static bool TryHandle(string response, ISubject<WalletResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "wallet")
+            if (!BitmexJsonSerializer.ContainsValue(response, "wallet"))
                 return false;
 
-            var parsed = response.ToObject<WalletResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<WalletResponse>(response);
             subject.OnNext(parsed);
 
             return true;

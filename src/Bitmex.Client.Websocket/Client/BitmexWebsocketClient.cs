@@ -13,12 +13,13 @@ using Bitmex.Client.Websocket.Responses.Trades;
 using Bitmex.Client.Websocket.Responses.TradeBins;
 using Bitmex.Client.Websocket.Responses.Wallets;
 using Bitmex.Client.Websocket.Validations;
-using Newtonsoft.Json.Linq;
 using Bitmex.Client.Websocket.Responses.Instruments;
 using Bitmex.Client.Websocket.Responses.Margins;
 using Websocket.Client;
 using Bitmex.Client.Websocket.Responses.Executions;
 using Bitmex.Client.Websocket.Responses.Fundings;
+using Utf8Json;
+using Utf8Json.Resolvers;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -41,6 +42,8 @@ namespace Bitmex.Client.Websocket.Client
 
             _communicator = communicator;
             _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
+
+            JsonSerializer.SetDefaultResolver(StandardResolver.CamelCase);
         }
 
         /// <summary>
@@ -132,31 +135,31 @@ namespace Bitmex.Client.Websocket.Client
 
         private bool HandleObjectMessage(string msg)
         {
-            var response = BitmexJsonSerializer.Deserialize<JObject>(msg);
-
             // ********************
             // ADD OBJECT HANDLERS BELOW
             // ********************
 
             return
 
-                TradeResponse.TryHandle(response, Streams.TradesSubject) ||
-                TradeBinResponse.TryHandle(response, Streams.TradeBinSubject) ||
-                BookResponse.TryHandle(response, Streams.BookSubject) ||
-                QuoteResponse.TryHandle(response, Streams.QuoteSubject) ||
-                LiquidationResponse.TryHandle(response, Streams.LiquidationSubject) ||
-                PositionResponse.TryHandle(response, Streams.PositionSubject) ||
-                MarginResponse.TryHandle(response, Streams.MarginSubject) ||
-                OrderResponse.TryHandle(response, Streams.OrderSubject) ||
-                WalletResponse.TryHandle(response, Streams.WalletSubject) ||
-                InstrumentResponse.TryHandle(response, Streams.InstrumentSubject) ||
-                ExecutionResponse.TryHandle(response, Streams.ExecutionSubject) ||
-                FundingResponse.TryHandle(response, Streams.FundingsSubject) ||
+                ErrorResponse.TryHandle(msg, Streams.ErrorSubject) ||
+                SubscribeResponse.TryHandle(msg, Streams.SubscribeSubject) ||
 
-                ErrorResponse.TryHandle(response, Streams.ErrorSubject) ||
-                SubscribeResponse.TryHandle(response, Streams.SubscribeSubject) ||
-                InfoResponse.TryHandle(response, Streams.InfoSubject) ||
-                AuthenticationResponse.TryHandle(response, Streams.AuthenticationSubject);
+                BookResponse.TryHandle(msg, Streams.BookSubject) ||
+                TradeResponse.TryHandle(msg, Streams.TradesSubject) ||
+                QuoteResponse.TryHandle(msg, Streams.QuoteSubject) ||
+                LiquidationResponse.TryHandle(msg, Streams.LiquidationSubject) ||
+                PositionResponse.TryHandle(msg, Streams.PositionSubject) ||
+                MarginResponse.TryHandle(msg, Streams.MarginSubject) ||
+                OrderResponse.TryHandle(msg, Streams.OrderSubject) ||
+                WalletResponse.TryHandle(msg, Streams.WalletSubject) ||
+                ExecutionResponse.TryHandle(msg, Streams.ExecutionSubject) ||
+                FundingResponse.TryHandle(msg, Streams.FundingsSubject) ||
+                InstrumentResponse.TryHandle(msg, Streams.InstrumentSubject) ||
+                TradeBinResponse.TryHandle(msg, Streams.TradeBinSubject) ||
+
+
+                InfoResponse.TryHandle(msg, Streams.InfoSubject) ||
+                AuthenticationResponse.TryHandle(msg, Streams.AuthenticationSubject);
         }
     }
 }

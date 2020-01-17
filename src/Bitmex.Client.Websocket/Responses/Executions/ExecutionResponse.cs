@@ -1,6 +1,5 @@
 ﻿using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 using System.Reactive.Subjects;
 
 namespace Bitmex.Client.Websocket.Responses.Executions
@@ -11,12 +10,12 @@ namespace Bitmex.Client.Websocket.Responses.Executions
 
         public Execution[] Data { get; set; }
 
-        internal static bool TryHandle(JObject response, ISubject<ExecutionResponse> subject)
+        internal static bool TryHandle(string response, ISubject<ExecutionResponse> subject)
         {
-            if (response?["table"]?.Value<string>() != "execution")
+            if (!BitmexJsonSerializer.ContainsValue(response, "execution"))
                 return false;
 
-            var parsed = response.ToObject<ExecutionResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<ExecutionResponse>(response);
             subject.OnNext(parsed);
 
             return true;

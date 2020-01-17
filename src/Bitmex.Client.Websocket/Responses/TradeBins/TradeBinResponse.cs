@@ -1,8 +1,7 @@
 ﻿using System.Reactive.Subjects;
+using System.Runtime.Serialization;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses.TradeBins
 {
@@ -24,22 +23,17 @@ namespace Bitmex.Client.Websocket.Responses.TradeBins
         /// <summary>
         /// Size of the bin ('1min', '5min', '1h', etc)
         /// </summary>
-        [JsonIgnore]
+        [IgnoreDataMember]
         public string Size { get; private set; }
 
 
-        internal static bool TryHandle(JObject response, ISubject<TradeBinResponse> subject)
+        internal static bool TryHandle(string response, ISubject<TradeBinResponse> subject)
         {
-            var type = response?["table"]?.Value<string>();
-
-            if (string.IsNullOrWhiteSpace(type))
+            if (!BitmexJsonSerializer.ContainsRaw(response, "tradeBin"))
                 return false;
 
-            if (!type.Contains("tradeBin"))
-                return false;
-
-            var parsed = response.ToObject<TradeBinResponse>(BitmexJsonSerializer.Serializer);
-            parsed.Size = type.Replace("tradeBin", string.Empty).Trim();
+            var parsed = BitmexJsonSerializer.Deserialize<TradeBinResponse>(response);
+            parsed.Size = parsed.Table?.Replace("tradeBin", string.Empty).Trim();
             subject.OnNext(parsed);
 
             return true;

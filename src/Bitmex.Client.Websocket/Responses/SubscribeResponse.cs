@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
-using Newtonsoft.Json.Linq;
 
 namespace Bitmex.Client.Websocket.Responses
 {
@@ -33,12 +32,13 @@ namespace Bitmex.Client.Websocket.Responses
         /// </summary>
         public bool IsSubscription => !string.IsNullOrWhiteSpace(Subscribe);
 
-        internal static bool TryHandle(JObject response, ISubject<SubscribeResponse> subject)
+        internal static bool TryHandle(string response, ISubject<SubscribeResponse> subject)
         {
-            if (response?["subscribe"] == null && response?["unsubscribe"] == null)
+            if (!BitmexJsonSerializer.ContainsProperty(response, "subscribe") && 
+                !BitmexJsonSerializer.ContainsProperty(response, "unsubscribe"))
                 return false;
 
-            var parsed = response.ToObject<SubscribeResponse>(BitmexJsonSerializer.Serializer);
+            var parsed = BitmexJsonSerializer.Deserialize<SubscribeResponse>(response);
             subject.OnNext(parsed);
             return true;
         }

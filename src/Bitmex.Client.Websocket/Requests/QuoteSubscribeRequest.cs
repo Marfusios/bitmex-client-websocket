@@ -1,4 +1,5 @@
-﻿using Bitmex.Client.Websocket.Validations;
+﻿using System.Runtime.Serialization;
+using Bitmex.Client.Websocket.Validations;
 
 namespace Bitmex.Client.Websocket.Requests
 {
@@ -22,7 +23,10 @@ namespace Bitmex.Client.Websocket.Requests
             Symbol = pair;
         }
 
+        [IgnoreDataMember]
         public override string Topic => "quote";
+
+        [IgnoreDataMember]
         public override string Symbol { get; }     
     }
 }

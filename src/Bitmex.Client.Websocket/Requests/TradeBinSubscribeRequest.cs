@@ -1,4 +1,5 @@
-﻿using Bitmex.Client.Websocket.Validations;
+﻿using System.Runtime.Serialization;
+using Bitmex.Client.Websocket.Validations;
 
 namespace Bitmex.Client.Websocket.Requests
 {
@@ -25,8 +26,13 @@ namespace Bitmex.Client.Websocket.Requests
             Topic = "tradeBin" + Size;
         }
 
+        [IgnoreDataMember]
         public string Size { get; } = "1m";
+
+        [IgnoreDataMember]
         public override string Topic { get; }
+
+        [IgnoreDataMember]
         public override string Symbol { get; }
 
     }
