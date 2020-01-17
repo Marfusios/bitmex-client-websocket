@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace Bitmex.Client.Websocket.Responses.Orders
 {
     [DebuggerDisplay("Order: {Symbol}, {OrderQty}. {Price}")]
     public class Order
     {
+        [DataMember(Name = "orderID")]
         public string OrderId { get; set; }
+
+        [DataMember(Name = "clOrdID")]
         public string ClOrdId { get; set; }
+
+        [DataMember(Name = "clOrdLinkID")]
         public string ClOrdLinkId {get; set; }
 
         public long? Account { get; set; }

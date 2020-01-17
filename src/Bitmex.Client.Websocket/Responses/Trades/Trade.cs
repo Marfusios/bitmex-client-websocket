@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Bitmex.Client.Websocket.Responses.Trades
 {
@@ -10,6 +11,8 @@ namespace Bitmex.Client.Websocket.Responses.Trades
         public long Size {get; set; }
         public double Price { get; set; }
         public BitmexTickDirection TickDirection { get; set; }
+
+        [DataMember(Name = "trdMatchID")]
         public string TrdMatchId { get; set; }
         public long? GrossValue { get; set; }
         public double? HomeNotional { get; set; }
