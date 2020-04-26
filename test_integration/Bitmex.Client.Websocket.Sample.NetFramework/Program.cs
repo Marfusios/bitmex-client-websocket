@@ -45,11 +45,12 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                     {
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
                            
-                        client.Send(new PingRequest()).Wait();
-                        client.Send(new TradesSubscribeRequest("XBTUSD")).Wait();
+                        client.Send(new PingRequest());
+                        client.Send(new TradesSubscribeRequest("XBTUSD"));
+                        //client.Send(new BookSubscribeRequest("XBTUSD"));
 
                         if (!string.IsNullOrWhiteSpace(API_SECRET))
-                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET)).Wait();
+                            client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
                     });   
 
                     client.Streams.ErrorStream.Subscribe(x =>
@@ -58,9 +59,9 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                     client.Streams.AuthenticationStream.Subscribe(x =>
                     {
                         Log.Information($"Authentication happened, success: {x.Success}");
-                        client.Send(new WalletSubscribeRequest()).Wait();
-                        client.Send(new OrderSubscribeRequest()).Wait();
-                        client.Send(new PositionSubscribeRequest()).Wait();
+                        client.Send(new WalletSubscribeRequest());
+                        client.Send(new OrderSubscribeRequest());
+                        client.Send(new PositionSubscribeRequest());
                     });
 
                     client.Streams.PongStream.Subscribe(x =>
@@ -72,6 +73,11 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                            Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:mm:ss.fff}, Amount: {x.Size}, " +
                                            $"Price: {x.Price}, Direction: {x.TickDirection}"))
                         );
+
+                    client.Streams.BookStream.Subscribe(book =>
+                        book.Data.Take(100).ToList().ForEach(x => Log.Information(
+                            $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
+                    );
 
                     communicator.Start();
                     

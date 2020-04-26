@@ -69,21 +69,21 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
 
             Subscribe(_client);
 
-            _communicator.ReconnectionHappened.Subscribe(async type =>
+            _communicator.ReconnectionHappened.Subscribe(info =>
             {
-                _view.Status($"Reconnected (type: {type})", StatusType.Info);
-                await SendSubscriptions(_client, pair);
+                _view.Status($"Reconnected (type: {info.Type})", StatusType.Info);
+                SendSubscriptions(_client, pair);
             });
 
-            _communicator.DisconnectionHappened.Subscribe(type =>
+            _communicator.DisconnectionHappened.Subscribe(info =>
             {
-                if (type == DisconnectionType.Error)
+                if (info.Type == DisconnectionType.Error)
                 {
-                    _view.Status($"Disconnected by error, next try in {_communicator.ErrorReconnectTimeoutMs/1000} sec", 
+                    _view.Status($"Disconnected by error, next try in {_communicator.ErrorReconnectTimeout?.TotalSeconds} sec", 
                         StatusType.Error);
                     return;
                 }
-                _view.Status($"Disconnected (type: {type})", 
+                _view.Status($"Disconnected (type: {info.Type})", 
                     StatusType.Warning);
             });
 
@@ -109,10 +109,10 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
             client.Streams.PongStream.ObserveOn(TaskPoolScheduler.Default).Subscribe(HandlePong);
         }
 
-        private async Task SendSubscriptions(BitmexWebsocketClient client, string pair)
+        private void SendSubscriptions(BitmexWebsocketClient client, string pair)
         {
-            await client.Send(new TradesSubscribeRequest(pair));
-            await client.Send(new BookSubscribeRequest(pair));
+            client.Send(new TradesSubscribeRequest(pair));
+            client.Send(new BookSubscribeRequest(pair));
         }
 
         private void HandleTrades(TradeResponse response)
@@ -157,24 +157,24 @@ namespace Bitmex.Client.Websocket.Sample.WinForms.Presenters
             _view.Bid = stats.Bid.ToString("#.0");
             _view.Ask = stats.Ask.ToString("#.0");
 
-            _view.BidAmount = $"{stats.BidAmountPerc:###}%{Environment.NewLine}{FormatToMilions(stats.BidAmount)}";
-            _view.AskAmount = $"{stats.AskAmountPerc:###}%{Environment.NewLine}{FormatToMilions(stats.AskAmount)}";
+            _view.BidAmount = $"{stats.BidAmountPerc:###}%{Environment.NewLine}{FormatToMillions(stats.BidAmount)}";
+            _view.AskAmount = $"{stats.AskAmountPerc:###}%{Environment.NewLine}{FormatToMillions(stats.AskAmount)}";
         }
 
-        private string FormatToMilions(double amount)
+        private string FormatToMillions(double amount)
         {
-            var milions = amount / 1000000;
-            return $"{_currency}{milions:#.00} M";
+            var millions = amount / 1000000;
+            return $"{_currency}{millions:#.00} M";
         }
 
         private void StartPingCheck(BitmexWebsocketClient client)
         {
             _pingSubscription = Observable
                 .Interval(TimeSpan.FromSeconds(5))
-                .Subscribe(async x =>
+                .Subscribe(x =>
                 {
                     _pingRequest = DateTime.UtcNow;
-                    await client.Send(new PingRequest());
+                    client.Send(new PingRequest());
                 });      
         }
 

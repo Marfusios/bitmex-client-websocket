@@ -45,7 +45,7 @@ namespace Bitmex.Client.Websocket.Sample
                 communicator.Name = "Bitmex-1";
                 communicator.ReconnectTimeout = TimeSpan.FromMinutes(10);
                 communicator.ReconnectionHappened.Subscribe(type =>
-                    Log.Information($"Reconnection happened, type: {type}"));
+                    Log.Information($"Reconnection happened, type: {type.Type}"));
 
                 using (var client = new BitmexWebsocketClient(communicator))
                 {
@@ -60,6 +60,8 @@ namespace Bitmex.Client.Websocket.Sample
 
                     communicator.Start();
 
+                    _ = StartPinging(client);
+
                     ExitEvent.WaitOne();
                 }
             }
@@ -68,6 +70,12 @@ namespace Bitmex.Client.Websocket.Sample
             Log.Debug("              STOPPING              ");
             Log.Debug("====================================");
             Log.CloseAndFlush();
+        }
+
+        private static async Task StartPinging(BitmexWebsocketClient client)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(30));
+            client.Send(new PingRequest());
         }
 
         private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
@@ -119,7 +127,7 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.OrderStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
                     Log.Information(
-                        $"Order {x.Symbol} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.OrderQty}, " +
+                        $"Order {x.Symbol} {x.OrderId} updated. Time: {x.Timestamp:HH:mm:ss.fff}, Amount: {x.OrderQty}, " +
                         $"Price: {x.Price}, Direction: {x.Side}, Working: {x.WorkingIndicator}, Status: {x.OrdStatus}"))
             );
 
@@ -134,7 +142,7 @@ namespace Bitmex.Client.Websocket.Sample
             client.Streams.TradesStream.Subscribe(y =>
                 y.Data.ToList().ForEach(x =>
                     Log.Information($"Trade {x.Symbol} executed. Time: {x.Timestamp:HH:mm:ss.fff}, [{x.Side}] Amount: {x.Size}, " +
-                                    $"Price: {x.Price}"))
+                                    $"Price: {x.Price}, Match: {x.TrdMatchId}"))
             );
 
             client.Streams.BookStream.Subscribe(book =>
