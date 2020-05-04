@@ -28,6 +28,7 @@ namespace Bitmex.Client.Websocket.Files
         public bool IsStarted { get; private set; }
         public bool IsRunning { get; private set; }
         public bool IsReconnectionEnabled { get; set; }
+        public bool IsTextMessageConversionEnabled { get; set; }
         public ClientWebSocket NativeClient { get; }
         public Encoding MessageEncoding { get; set; }
 

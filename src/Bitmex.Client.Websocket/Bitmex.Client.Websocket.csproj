@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>Bitmex.Client.Websocket</PackageId>
     <Version>3.1.0</Version>
     <Authors>Mariusz Kotas</Authors>
@@ -19,6 +19,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile> 
     <AssemblyVersion>3.1.0.0</AssemblyVersion>
     <FileVersion>3.1.0.0</FileVersion>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +30,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Utf8Json" Version="1.3.7" />
-    <PackageReference Include="Websocket.Client" Version="4.1.81" />
+    <PackageReference Include="Websocket.Client" Version="4.3.12" />
   </ItemGroup>
 
   <ItemGroup>
