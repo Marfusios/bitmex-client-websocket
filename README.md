@@ -69,7 +69,8 @@ More usage examples:
 | Insurance              |                |
 | Liquidation            |  ✔            |
 | Orderbook L2           |  ✔            |
-| Orderbook L10          |                |
+| Orderbook L2 (25)      |  ✔            |
+| Orderbook snapshot (10)|                |
 | Public notifications   |                |
 | Quote                  |  ✔            |
 | Quote bin 1m           |                |

@@ -85,10 +85,12 @@ namespace Bitmex.Client.Websocket.Sample
             client.Send(new TradesSubscribeRequest("XBTUSD"));
             //client.Send(new TradeBinSubscribeRequest("1m", "XBTUSD"));
             //client.Send(new TradeBinSubscribeRequest("5m", "XBTUSD"));
-            //client.Send(new QuoteSubscribeRequest("XBTUSD"));
+            client.Send(new QuoteSubscribeRequest("XBTUSD"));
             client.Send(new LiquidationSubscribeRequest());
-            //client.Send(new InstrumentSubscribeRequest("XBTUSD"));
+            client.Send(new InstrumentSubscribeRequest("XBTUSD"));
             client.Send(new FundingsSubscribeRequest("XBTUSD"));
+            //client.Send(new Book25SubscribeRequest("XBTUSD"));
+            //client.Send(new Book10SubscribeRequest("XBTUSD"));
 
             if (!string.IsNullOrWhiteSpace(API_SECRET))
                 client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
@@ -146,6 +148,11 @@ namespace Bitmex.Client.Websocket.Sample
             );
 
             client.Streams.BookStream.Subscribe(book =>
+                book.Data.Take(100).ToList().ForEach(x => Log.Information(
+                    $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
+            );
+
+            client.Streams.Book25Stream.Subscribe(book =>
                 book.Data.Take(100).ToList().ForEach(x => Log.Information(
                     $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
             );

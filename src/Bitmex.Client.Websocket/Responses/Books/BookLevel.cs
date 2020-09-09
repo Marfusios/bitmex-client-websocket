@@ -15,6 +15,9 @@
         /// </summary>
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// Level side
+        /// </summary>
         public BitmexSide Side { get; set; }
 
         /// <summary>

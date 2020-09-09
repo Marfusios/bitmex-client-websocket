@@ -4,14 +4,14 @@ using Bitmex.Client.Websocket.Validations;
 namespace Bitmex.Client.Websocket.Requests
 {
     /// <summary>
-    /// Subscribe to order book L2 stream
+    /// Subscribe to order book snapshot stream (only top 10 levels)
     /// </summary>
-    public class BookSubscribeRequest : SubscribeRequestBase
+    public class Book10SubscribeRequest : SubscribeRequestBase
     {
         /// <summary>
         /// Subscribe to order book from all pairs
         /// </summary>
-        public BookSubscribeRequest()
+        public Book10SubscribeRequest()
         {
             Symbol = string.Empty;
         }
@@ -19,7 +19,7 @@ namespace Bitmex.Client.Websocket.Requests
         /// <summary>
         /// Subscribe to order book from selected pair ('XBTUSD', etc)
         /// </summary>
-        public BookSubscribeRequest(string pair)
+        public Book10SubscribeRequest(string pair)
         {
             BmxValidations.ValidateInput(pair, nameof(pair));
 
@@ -30,7 +30,7 @@ namespace Bitmex.Client.Websocket.Requests
         /// Order book L2 topic
         /// </summary>
         [IgnoreDataMember]
-        public override string Topic => "orderBookL2";
+        public override string Topic => "orderBook10";
 
 
         /// <inheritdoc />

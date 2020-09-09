@@ -115,6 +115,8 @@ namespace Bitmex.Client.Websocket.Client
                 if (handled)
                     return;
 
+                if(!string.IsNullOrWhiteSpace(messageSafe))
+                    Streams.UnhandledMessageSubject.OnNext(messageSafe);
                 Log.Warn(L($"Unhandled response:  '{messageSafe}'"));
             }
             catch (Exception e)
@@ -144,9 +146,10 @@ namespace Bitmex.Client.Websocket.Client
                 ErrorResponse.TryHandle(msg, Streams.ErrorSubject) ||
                 SubscribeResponse.TryHandle(msg, Streams.SubscribeSubject) ||
 
-                BookResponse.TryHandle(msg, Streams.BookSubject) ||
+                BookResponse.TryHandle(msg, Streams.BookSubject, "orderBookL2") ||
                 TradeResponse.TryHandle(msg, Streams.TradesSubject) ||
                 QuoteResponse.TryHandle(msg, Streams.QuoteSubject) ||
+                BookResponse.TryHandle(msg, Streams.Book25Subject, "orderBookL2_25") ||
                 LiquidationResponse.TryHandle(msg, Streams.LiquidationSubject) ||
                 PositionResponse.TryHandle(msg, Streams.PositionSubject) ||
                 MarginResponse.TryHandle(msg, Streams.MarginSubject) ||

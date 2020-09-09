@@ -32,6 +32,7 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<TradeResponse> TradesSubject = new Subject<TradeResponse>();
         internal readonly Subject<TradeBinResponse> TradeBinSubject = new Subject<TradeBinResponse>();
         internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
+        internal readonly Subject<BookResponse> Book25Subject = new Subject<BookResponse>();
         internal readonly Subject<QuoteResponse> QuoteSubject = new Subject<QuoteResponse>();
         internal readonly Subject<LiquidationResponse> LiquidationSubject = new Subject<LiquidationResponse>();
         internal readonly Subject<InstrumentResponse> InstrumentSubject = new Subject<InstrumentResponse>();
@@ -42,6 +43,8 @@ namespace Bitmex.Client.Websocket.Client
         internal readonly Subject<PositionResponse> PositionSubject = new Subject<PositionResponse>();
         internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
         internal readonly Subject<ExecutionResponse> ExecutionSubject = new Subject<ExecutionResponse>();
+
+        internal readonly Subject<string> UnhandledMessageSubject = new Subject<string>();
 
 
         // PUBLIC
@@ -80,6 +83,11 @@ namespace Bitmex.Client.Websocket.Client
         /// Order book stream - emits every update in the order book
         /// </summary>
         public IObservable<BookResponse> BookStream => BookSubject.AsObservable();
+
+        /// <summary>
+        /// Order book stream - emits every update in the order book
+        /// </summary>
+        public IObservable<BookResponse> Book25Stream => Book25Subject.AsObservable();
 
         /// <summary>
         /// Quotes stream - emits on every change of top level of order book
@@ -132,8 +140,13 @@ namespace Bitmex.Client.Websocket.Client
         public IObservable<MarginResponse> MarginStream => MarginSubject.AsObservable();
 
         /// <summary>
-        /// Stream of all raw transactions, which includes order opening and cancelation, and order status changes
+        /// Stream of all raw transactions, which includes order opening and cancellation, and order status changes
         /// </summary>
         public IObservable<ExecutionResponse> ExecutionStream => ExecutionSubject.AsObservable();
+
+        /// <summary>
+        /// Stream of all raw unhandled messages (that are not yet implemented)
+        /// </summary>
+        public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
     }
 }
