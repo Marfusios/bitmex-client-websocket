@@ -14,6 +14,11 @@ namespace Bitmex.Client.Websocket.Recorder
         private readonly UnicodeEncoding _uniEncoding = new UnicodeEncoding();
 
         /// <summary>
+        /// Whether the recorder is currently writing to disk. Used to avoid interupting int he middle of a record.
+        /// </summary>
+        public bool IsWriting { get; private set; } = false;
+
+        /// <summary>
         /// A BitmexWebsocketClient which records the raw data comming off the websocket
         /// </summary>
         /// <param name="communicator"></param>
@@ -29,7 +34,9 @@ namespace Bitmex.Client.Websocket.Recorder
         protected override void HandleMessage(ResponseMessage message)
         {
             var tempString = message + _delimiter;
+            IsWriting = true;
             _recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
+            IsWriting = false;
             base.HandleMessage(message);
         }
     }
