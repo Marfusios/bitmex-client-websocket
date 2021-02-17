@@ -31,7 +31,8 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
 
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainOnProcessExit;
             AssemblyLoadContext.Default.Unloading += DefaultOnUnloading;
- 
+            Console.CancelKeyPress += ConsoleOnCancelKeyPress;
+
             Console.WriteLine("|=======================|");
             Console.WriteLine("|     BITMEX CLIENT     |");
             Console.WriteLine("|=======================|");
@@ -54,7 +55,6 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
                 var recordingPath = Path.Combine(ProjectDirectory, RecordingFile);
                 using (var client = new BitmexWebsocketRecorderClient(communicator, recordingPath, delimiter: ";;"))
                 {
-                    Console.CancelKeyPress += (sender, e) => ConsoleOnCancelKeyPress(sender, e, client);
 
                     client.Streams.InfoStream.Subscribe(info =>
                     {
@@ -218,7 +218,7 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.ColoredConsole(LogEventLevel.Information)
+                .WriteTo.ColoredConsole(LogEventLevel.Debug)
                 .CreateLogger();
         }
 
@@ -234,14 +234,11 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
             ExitEvent.Set();
         }
 
-        private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e, BitmexWebsocketRecorderClient client)
+        private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            Log.Warning("Attempting to cancel process");
+            Log.Warning("Canceling process");
             e.Cancel = true;
-            if (client.IsWriting) 
-                Log.Warning("Cannot interrupt disk write. Please try again.");
-            else
-                ExitEvent.Set();
+            ExitEvent.Set();
         }
     }
 }

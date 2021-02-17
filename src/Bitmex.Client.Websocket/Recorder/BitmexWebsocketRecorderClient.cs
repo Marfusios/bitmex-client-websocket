@@ -1,22 +1,26 @@
 ﻿using Bitmex.Client.Websocket.Client;
 using Bitmex.Client.Websocket.Communicator;
+using Bitmex.Client.Websocket.Logging;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Websocket.Client;
+using Utf8Json;
 
 namespace Bitmex.Client.Websocket.Recorder
 {
-    public class BitmexWebsocketRecorderClient : BitmexWebsocketClient
+    public class BitmexWebsocketRecorderClient : BitmexWebsocketClient, IDisposable
     {
-        private readonly FileStream _recording;
-        private readonly string _delimiter;
-        private readonly UnicodeEncoding _uniEncoding = new UnicodeEncoding();
+        private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
+        private static readonly object _locker = new object();
 
-        /// <summary>
-        /// Whether the recorder is currently writing to disk. Used to avoid interupting int he middle of a record.
-        /// </summary>
-        public bool IsWriting { get; private set; } = false;
+        private readonly FileStream _recordingStream;
+        private readonly TextWriter _recorder;
+
+        private readonly string _delimiter;
+        private bool _stopped = false;
+        private readonly UnicodeEncoding _uniEncoding = new UnicodeEncoding();
 
         /// <summary>
         /// A BitmexWebsocketClient which records the raw data comming off the websocket
@@ -27,16 +31,42 @@ namespace Bitmex.Client.Websocket.Recorder
         public BitmexWebsocketRecorderClient(IBitmexCommunicator communicator, string recordingPath, string delimiter = ";;")
             : base(communicator)
         {
-            _recording = File.Create(recordingPath);
+            _recordingStream = File.Create(recordingPath);
+            _recorder = new StreamWriter(_recordingStream);
             _delimiter = delimiter;
+        }
+
+        /// <summary>
+        /// This ensures that the current record finished writing before disposal is complete.
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
+            Log.Debug("Stopped BitMEX Websocket Recorder.");
+        }
+ 
+        /// <summary>
+        /// Stop the recording after it finishes writing the current record.
+        /// </summary>
+        public void Stop()
+        {
+            // Maybe it is enough to just flush without any locking?
+            lock (_locker)
+            {
+                _stopped = true;
+                _recorder.Flush();
+            }
         }
 
         protected override void HandleMessage(ResponseMessage message)
         {
             var tempString = message + _delimiter;
-            IsWriting = true;
-            _recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
-            IsWriting = false;
+            lock (_locker)
+            {
+                if (!_stopped)
+                    _recorder.Write(tempString);
+                    //_recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
+            }
             base.HandleMessage(message);
         }
     }
