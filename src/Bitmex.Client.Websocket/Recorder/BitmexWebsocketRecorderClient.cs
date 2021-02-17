@@ -15,15 +15,12 @@ namespace Bitmex.Client.Websocket.Recorder
         private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
         private static readonly object _locker = new object();
 
-        private readonly FileStream _recording;
+        private readonly FileStream _recordingStream;
+        private readonly TextWriter _recorder;
+
         private readonly string _delimiter;
         private bool _stopped = false;
         private readonly UnicodeEncoding _uniEncoding = new UnicodeEncoding();
-
-        /// <summary>
-        /// Whether the recorder is currently writing to disk. Used to avoid interupting int he middle of a record.
-        /// </summary>
-        public bool IsWriting { get; private set; } = false;
 
         /// <summary>
         /// A BitmexWebsocketClient which records the raw data comming off the websocket
@@ -34,7 +31,8 @@ namespace Bitmex.Client.Websocket.Recorder
         public BitmexWebsocketRecorderClient(IBitmexCommunicator communicator, string recordingPath, string delimiter = ";;")
             : base(communicator)
         {
-            _recording = File.Create(recordingPath);
+            _recordingStream = File.Create(recordingPath);
+            _recorder = new StreamWriter(_recordingStream);
             _delimiter = delimiter;
         }
 
@@ -48,13 +46,15 @@ namespace Bitmex.Client.Websocket.Recorder
         }
  
         /// <summary>
-        /// Stop the recording after it finished writing the current record.
+        /// Stop the recording after it finishes writing the current record.
         /// </summary>
         public void Stop()
         {
+            // Maybe it is enough to just flush without any locking?
             lock (_locker)
             {
                 _stopped = true;
+                _recorder.Flush();
             }
         }
 
@@ -64,7 +64,8 @@ namespace Bitmex.Client.Websocket.Recorder
             lock (_locker)
             {
                 if (!_stopped)
-                    _recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
+                    _recorder.Write(tempString);
+                    //_recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
             }
             base.HandleMessage(message);
         }
