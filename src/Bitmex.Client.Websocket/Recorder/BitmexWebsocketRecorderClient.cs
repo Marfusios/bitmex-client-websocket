@@ -26,14 +26,21 @@ namespace Bitmex.Client.Websocket.Recorder
         /// A BitmexWebsocketClient which records the raw data comming off the websocket
         /// </summary>
         /// <param name="communicator"></param>
-        /// <param name="recordingPath">Recording file pathname. Overwritten if it exists.</param>
+        /// <param name="recordingPath">Recording file pathname. Overwritten if it exists. If null recording is disabled.</param>
         /// <param name="delimiter">Separator inserted between records.</param>
-        public BitmexWebsocketRecorderClient(IBitmexCommunicator communicator, string recordingPath, string delimiter = ";;")
+        public BitmexWebsocketRecorderClient(IBitmexCommunicator communicator, string recordingPath = null, string delimiter = ";;")
             : base(communicator)
         {
-            _recordingStream = File.Create(recordingPath);
-            _recorder = new StreamWriter(_recordingStream);
-            _delimiter = delimiter;
+            if (recordingPath == null)
+            {
+                _stopped = true;
+            }
+            else
+            {
+                _recordingStream = File.Create(recordingPath);
+                _recorder = new StreamWriter(_recordingStream);
+                _delimiter = delimiter;
+            }
         }
 
         /// <summary>
@@ -65,7 +72,6 @@ namespace Bitmex.Client.Websocket.Recorder
             {
                 if (!_stopped)
                     _recorder.Write(tempString);
-                    //_recording.Write(_uniEncoding.GetBytes(tempString), 0, _uniEncoding.GetByteCount(tempString));
             }
             base.HandleMessage(message);
         }

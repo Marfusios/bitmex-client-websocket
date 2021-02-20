@@ -18,8 +18,6 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
         private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
         private static readonly string RecordingFile = "data/bitmex_raw_xbtusd.txt";
 
-        //private static  readonly string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        //private static readonly string workingDir = Environment.CurrentDirectory;
         private static readonly string ProjectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
 
         private static readonly string API_KEY = "your_api_key";
@@ -41,7 +39,6 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
             Log.Debug("====================================");
             Log.Debug("              STARTING              ");
             Log.Debug("====================================");
-
 
 
             var url = BitmexValues.ApiWebsocketUrl;
