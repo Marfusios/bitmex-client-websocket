@@ -52,7 +52,6 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
                 var recordingPath = Path.Combine(ProjectDirectory, RecordingFile);
                 using (var client = new BitmexWebsocketRecorderClient(communicator, recordingPath, delimiter: ";;"))
                 {
-
                     client.Streams.InfoStream.Subscribe(info =>
                     {
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
