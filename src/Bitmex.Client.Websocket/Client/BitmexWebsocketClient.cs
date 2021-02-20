@@ -28,7 +28,7 @@ namespace Bitmex.Client.Websocket.Client
     /// Use method `Send()` to subscribe to channels.
     /// And `Streams` to subscribe. 
     /// </summary>
-    public class BitmexWebsocketClient : IDisposable
+    public class BitmexWebsocketClient : IBitmexWebsocketClient, IDisposable
     {
         private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
 
