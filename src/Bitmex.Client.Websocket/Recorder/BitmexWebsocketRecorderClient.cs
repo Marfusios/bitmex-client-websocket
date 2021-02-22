@@ -16,7 +16,7 @@ namespace Bitmex.Client.Websocket.Recorder
         private static readonly object _locker = new object();
 
         private readonly FileStream _recordingStream;
-        private readonly TextWriter _recorder;
+        private readonly TextWriter _recorder = null;
 
         private readonly string _delimiter;
         private bool _stopped = false;
@@ -61,7 +61,7 @@ namespace Bitmex.Client.Websocket.Recorder
             lock (_locker)
             {
                 _stopped = true;
-                _recorder.Flush();
+                _recorder?.Flush();
             }
         }
 
