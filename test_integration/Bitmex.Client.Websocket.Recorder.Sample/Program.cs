@@ -75,13 +75,13 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
             Log.CloseAndFlush();
         }
 
-        private static async Task StartPinging(IBitmexWebsocketClient client)
+        private static async Task StartPinging(BitmexWebsocketRecorderClient client)
         {
             await Task.Delay(TimeSpan.FromSeconds(30));
             client.Send(new PingRequest());
         }
 
-        private static async Task SendSubscriptionRequests(IBitmexWebsocketClient client)
+        private static async Task SendSubscriptionRequests(BitmexWebsocketRecorderClient client)
         {
             client.Send(new PingRequest());
             //client.Send(new BookSubscribeRequest("XBTUSD"));
@@ -99,7 +99,7 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
                 client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
         }
 
-        private static void SubscribeToStreams(IBitmexWebsocketClient client)
+        private static void SubscribeToStreams(BitmexWebsocketRecorderClient client)
         {
             client.Streams.ErrorStream.Subscribe(x =>
                 Log.Warning($"Error received, message: {x.Error}, status: {x.Status}"));
