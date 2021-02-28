@@ -6,6 +6,7 @@ using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Recorder;
+using Bitmex.Client.Websocket.Client;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Websockets;
 using Serilog;
@@ -52,7 +53,6 @@ namespace Bitmex.Client.Websocket.Recorder.Sample
                 var recordingPath = Path.Combine(ProjectDirectory, RecordingFile);
                 using (var client = new BitmexWebsocketRecorderClient(communicator, recordingPath, delimiter: ";;"))
                 {
-
                     client.Streams.InfoStream.Subscribe(info =>
                     {
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
