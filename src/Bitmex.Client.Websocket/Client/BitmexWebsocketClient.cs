@@ -97,7 +97,7 @@ namespace Bitmex.Client.Websocket.Client
             return $"[BMX WEBSOCKET CLIENT] {msg}";
         }
 
-        private void HandleMessage(ResponseMessage message)
+        protected virtual void HandleMessage(ResponseMessage message)
         {
             try
             {
