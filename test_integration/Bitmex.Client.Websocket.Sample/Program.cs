@@ -53,7 +53,7 @@ namespace Bitmex.Client.Websocket.Sample
                     client.Streams.InfoStream.Subscribe(info =>
                     {
                         Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
-                        SendSubscriptionRequests(client).Wait();
+                        SendSubscriptionRequests(client);
                     });   
 
                     SubscribeToStreams(client);
@@ -78,7 +78,7 @@ namespace Bitmex.Client.Websocket.Sample
             client.Send(new PingRequest());
         }
 
-        private static async Task SendSubscriptionRequests(BitmexWebsocketClient client)
+        private static void SendSubscriptionRequests(BitmexWebsocketClient client)
         {
             client.Send(new PingRequest());
             //client.Send(new BookSubscribeRequest("XBTUSD"));
