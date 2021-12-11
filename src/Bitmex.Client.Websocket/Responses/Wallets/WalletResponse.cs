@@ -2,23 +2,22 @@
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
 
-namespace Bitmex.Client.Websocket.Responses.Wallets
+namespace Bitmex.Client.Websocket.Responses.Wallets;
+
+public class WalletResponse : ResponseBase
 {
-    public class WalletResponse : ResponseBase
+    public override MessageType Op => MessageType.Wallet;
+
+    public Wallet[] Data { get; set; }
+
+    internal static bool TryHandle(string response, ISubject<WalletResponse> subject)
     {
-        public override MessageType Op => MessageType.Wallet;
+        if (!BitmexJsonSerializer.ContainsValue(response, "wallet"))
+            return false;
 
-        public Wallet[] Data { get; set; }
+        var parsed = BitmexJsonSerializer.Deserialize<WalletResponse>(response);
+        subject.OnNext(parsed);
 
-        internal static bool TryHandle(string response, ISubject<WalletResponse> subject)
-        {
-            if (!BitmexJsonSerializer.ContainsValue(response, "wallet"))
-                return false;
-
-            var parsed = BitmexJsonSerializer.Deserialize<WalletResponse>(response);
-            subject.OnNext(parsed);
-
-            return true;
-        }
+        return true;
     }
 }

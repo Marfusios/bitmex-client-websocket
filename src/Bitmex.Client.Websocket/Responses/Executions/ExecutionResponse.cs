@@ -2,23 +2,22 @@
 using Bitmex.Client.Websocket.Messages;
 using System.Reactive.Subjects;
 
-namespace Bitmex.Client.Websocket.Responses.Executions
+namespace Bitmex.Client.Websocket.Responses.Executions;
+
+public class ExecutionResponse : ResponseBase
 {
-    public class ExecutionResponse : ResponseBase
+    public override MessageType Op => MessageType.Execution;
+
+    public Execution[] Data { get; set; }
+
+    internal static bool TryHandle(string response, ISubject<ExecutionResponse> subject)
     {
-        public override MessageType Op => MessageType.Execution;
+        if (!BitmexJsonSerializer.ContainsValue(response, "execution"))
+            return false;
 
-        public Execution[] Data { get; set; }
+        var parsed = BitmexJsonSerializer.Deserialize<ExecutionResponse>(response);
+        subject.OnNext(parsed);
 
-        internal static bool TryHandle(string response, ISubject<ExecutionResponse> subject)
-        {
-            if (!BitmexJsonSerializer.ContainsValue(response, "execution"))
-                return false;
-
-            var parsed = BitmexJsonSerializer.Deserialize<ExecutionResponse>(response);
-            subject.OnNext(parsed);
-
-            return true;
-        }
+        return true;
     }
 }

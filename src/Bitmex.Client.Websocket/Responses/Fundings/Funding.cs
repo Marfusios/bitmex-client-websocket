@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Bitmex.Client.Websocket.Responses.Fundings
+namespace Bitmex.Client.Websocket.Responses.Fundings;
+
+public class Funding
 {
-    public class Funding
-    {
-        public DateTime Timestamp { get; set; }
+    public DateTime Timestamp { get; set; }
 
-        public string Symbol { get; set; }
+    public string Symbol { get; set; }
 
-        public DateTime FundingInterval { get; set; }
+    public DateTime FundingInterval { get; set; }
 
-        public double FundingRate { get; set; }
+    public double FundingRate { get; set; }
 
-        public double FundingRateDaily { get; set; }
-    }
+    public double FundingRateDaily { get; set; }
 }

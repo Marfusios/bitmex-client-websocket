@@ -1,33 +1,32 @@
-﻿namespace Bitmex.Client.Websocket.Responses.Books
+﻿namespace Bitmex.Client.Websocket.Responses.Books;
+
+/// <summary>
+/// The state of the Bitmex order book
+/// </summary>
+public class BookLevel
 {
     /// <summary>
-    /// The state of the Bitmex order book
+    /// Order book level id (combination of price and symbol)
     /// </summary>
-    public class BookLevel
-    {
-        /// <summary>
-        /// Order book level id (combination of price and symbol)
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Target symbol
-        /// </summary>
-        public string Symbol { get; set; }
+    /// <summary>
+    /// Target symbol
+    /// </summary>
+    public string Symbol { get; set; }
 
-        /// <summary>
-        /// Level side
-        /// </summary>
-        public BitmexSide Side { get; set; }
+    /// <summary>
+    /// Level side
+    /// </summary>
+    public BitmexSide Side { get; set; }
 
-        /// <summary>
-        /// Available only for 'partial', 'insert' and 'update' action
-        /// </summary>
-        public long? Size { get; set; }
+    /// <summary>
+    /// Available only for 'partial', 'insert' and 'update' action
+    /// </summary>
+    public long? Size { get; set; }
 
-        /// <summary>
-        /// Available only for 'partial' and 'insert' action, use Id otherwise
-        /// </summary>
-        public double? Price { get; set; }
-    }
+    /// <summary>
+    /// Available only for 'partial' and 'insert' action, use Id otherwise
+    /// </summary>
+    public double? Price { get; set; }
 }

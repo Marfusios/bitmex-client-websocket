@@ -1,8 +1,7 @@
-﻿namespace Bitmex.Client.Websocket.Responses
+﻿namespace Bitmex.Client.Websocket.Responses;
+
+public class FilterInfo
 {
-    public class FilterInfo
-    {
-        public long? Account { get; set; }
-        public string Symbol { get; set; }
-    }
+    public long? Account { get; set; }
+    public string Symbol { get; set; }
 }

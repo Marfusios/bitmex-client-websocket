@@ -24,9 +24,9 @@ https://www.bitmex.com/app/wsAPI
 var exitEvent = new ManualResetEvent(false);
 var url = BitmexValues.ApiWebsocketUrl;
 
-using (var communicator = new BitmexWebsocketCommunicator(url))
+using (var communicator = new WebsocketClient(url))
 {
-    using (var client = new BitmexWebsocketClient(communicator))
+    using (var client = new BitmexWebsocketClient(NullLogger.Instance, communicator))
     {
         client.Streams.InfoStream.Subscribe(info =>
         {
@@ -141,23 +141,23 @@ Beware that you **need to resubscribe to channels** after reconnection happens. 
 
 ### Backtesting
 
-The library is prepared for backtesting. The dependency between `Client` and `Communicator` is via abstraction `IBitmexCommunicator`. There are two communicator implementations: 
-* `BitmexWebsocketCommunicator` - a realtime communication with Bitmex via websocket API.
-* `BitmexFileCommunicator` - a simulated communication, raw data are loaded from files and streamed. If you are **interested in buying historical raw data** (trades, order book events), contact me.
+The library is prepared for backtesting. The dependency between `Client` and `Communicator` is via abstraction `IWebsocketClient`. There are two communicator implementations: 
+* `WebsocketClient` - a realtime communication with Bitmex via websocket API.
+* `BitmexFileClient` - a simulated communication, raw data are loaded from files and streamed. If you are **interested in buying historical raw data** (trades, order book events), contact me.
 
-Feel free to implement `IBitmexCommunicator` on your own, for example, load raw data from database, cache, etc. 
+Feel free to implement `IWebsocketClient` on your own, for example, load raw data from database, cache, etc. 
 
 Usage: 
 
 ```csharp
-var communicator = new BitmexFileCommunicator();
+var communicator = new BitmexFileClient();
 communicator.FileNames = new[]
 {
     "data/bitmex_raw_xbtusd_2018-11-13.txt"
 };
 communicator.Delimiter = ";;";
 
-var client = new BitmexWebsocketClient(communicator);
+var client = new BitmexWebsocketClient(NullLogger.Instance, communicator);
 client.Streams.TradesStream.Subscribe(response =>
 {
     // do something with trade

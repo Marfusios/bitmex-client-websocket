@@ -1,15 +1,14 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Responses.Instruments
+namespace Bitmex.Client.Websocket.Responses.Instruments;
+
+public enum InstrumentMarkMethod
 {
-    public enum InstrumentMarkMethod
-    {
-        Undefined,
+    Undefined,
 
-        [DataMember(Name = "fairPrice")]
-        FairPrice,
+    [DataMember(Name = "fairPrice")]
+    FairPrice,
 
-        [DataMember(Name = "lastPrice")]
-        LastPrice
-    }
+    [DataMember(Name = "lastPrice")]
+    LastPrice
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
 using Bitmex.Client.Websocket.Responses.Liquidation;
@@ -15,138 +13,111 @@ using Bitmex.Client.Websocket.Responses.Margins;
 using Bitmex.Client.Websocket.Responses.Executions;
 using Bitmex.Client.Websocket.Responses.Fundings;
 
-namespace Bitmex.Client.Websocket.Client
+namespace Bitmex.Client.Websocket.Client;
+
+/// <summary>
+/// All provided streams.
+/// You need to send subscription request in advance (via method `Send()` on BitmexWebsocketClient)
+/// </summary>
+public class BitmexClientStreams
 {
+    // PUBLIC
+
     /// <summary>
-    /// All provided streams.
-    /// You need to send subscription request in advance (via method `Send()` on BitmexWebsocketClient)
+    /// Server errors stream
     /// </summary>
-    public class BitmexClientStreams
-    {
-        internal readonly Subject<ErrorResponse> ErrorSubject = new Subject<ErrorResponse>();
-        internal readonly Subject<InfoResponse> InfoSubject = new Subject<InfoResponse>();
-        internal readonly Subject<PongResponse> PongSubject = new Subject<PongResponse>();
-        internal readonly Subject<SubscribeResponse> SubscribeSubject = new Subject<SubscribeResponse>();
-        internal readonly Subject<AuthenticationResponse> AuthenticationSubject = new Subject<AuthenticationResponse>();
+    public readonly Subject<ErrorResponse> ErrorStream = new();
 
-        internal readonly Subject<TradeResponse> TradesSubject = new Subject<TradeResponse>();
-        internal readonly Subject<TradeBinResponse> TradeBinSubject = new Subject<TradeBinResponse>();
-        internal readonly Subject<BookResponse> BookSubject = new Subject<BookResponse>();
-        internal readonly Subject<BookResponse> Book25Subject = new Subject<BookResponse>();
-        internal readonly Subject<QuoteResponse> QuoteSubject = new Subject<QuoteResponse>();
-        internal readonly Subject<LiquidationResponse> LiquidationSubject = new Subject<LiquidationResponse>();
-        internal readonly Subject<InstrumentResponse> InstrumentSubject = new Subject<InstrumentResponse>();
-        internal readonly Subject<FundingResponse> FundingsSubject = new Subject<FundingResponse>();
+    /// <summary>
+    /// Info stream, sends initial information after reconnection
+    /// </summary>
+    public readonly Subject<InfoResponse> InfoStream = new();
 
-        internal readonly Subject<WalletResponse> WalletSubject = new Subject<WalletResponse>();
-        internal readonly Subject<OrderResponse> OrderSubject = new Subject<OrderResponse>();
-        internal readonly Subject<PositionResponse> PositionSubject = new Subject<PositionResponse>();
-        internal readonly Subject<MarginResponse> MarginSubject = new Subject<MarginResponse>();
-        internal readonly Subject<ExecutionResponse> ExecutionSubject = new Subject<ExecutionResponse>();
+    /// <summary>
+    /// Response stream to every ping request
+    /// </summary>
+    public readonly Subject<PongResponse> PongStream = new();
 
-        internal readonly Subject<string> UnhandledMessageSubject = new Subject<string>();
+    /// <summary>
+    /// Subscription info stream, emits status after sending subscription request
+    /// </summary>
+    public readonly Subject<SubscribeResponse> SubscribeStream = new();
 
+    /// <summary>
+    /// Trades stream - emits every executed trade on Bitmex
+    /// </summary>
+    public readonly Subject<TradeResponse> TradesStream = new();
 
-        // PUBLIC
+    /// <summary>
+    /// Chunk of trades - emits grouped trades together
+    /// </summary>
+    public readonly Subject<TradeBinResponse> TradeBinStream = new();
 
-        /// <summary>
-        /// Server errors stream
-        /// </summary>
-        public IObservable<ErrorResponse> ErrorStream => ErrorSubject.AsObservable();
+    /// <summary>
+    /// Order book stream - emits every update in the order book
+    /// </summary>
+    public readonly Subject<BookResponse> BookStream = new();
 
-        /// <summary>
-        /// Info stream, sends initial information after reconnection
-        /// </summary>
-        public IObservable<InfoResponse> InfoStream => InfoSubject.AsObservable();
+    /// <summary>
+    /// Order book stream - emits every update in the order book
+    /// </summary>
+    public readonly Subject<BookResponse> Book25Stream = new();
 
-        /// <summary>
-        /// Response stream to every ping request
-        /// </summary>
-        public IObservable<PongResponse> PongStream => PongSubject.AsObservable();
+    /// <summary>
+    /// Quotes stream - emits on every change of top level of order book
+    /// </summary>
+    public readonly Subject<QuoteResponse> QuoteStream = new();
 
-        /// <summary>
-        /// Subscription info stream, emits status after sending subscription request
-        /// </summary>
-        public IObservable<SubscribeResponse> SubscribeStream => SubscribeSubject.AsObservable();
+    /// <summary>
+    /// Liquidation stream - emits message whenever liquidation happens on Bitmex
+    /// </summary>
+    public readonly Subject<LiquidationResponse> LiquidationStream = new();
 
-        /// <summary>
-        /// Trades stream - emits every executed trade on Bitmex
-        /// </summary>
-        public IObservable<TradeResponse> TradesStream => TradesSubject.AsObservable();
+    /// <summary>
+    /// Stream of all Trade-able Contracts, Indices, and History
+    /// </summary>
+    public readonly Subject<InstrumentResponse> InstrumentStream = new();
 
-        /// <summary>
-        /// Chunk of trades - emits grouped trades together
-        /// </summary>
-        public IObservable<TradeBinResponse> TradeBinStream => TradeBinSubject.AsObservable();
+    /// <summary>
+    /// Fundings stream - updates of swap funding rates. Sent every funding interval (usually 8hrs) 
+    /// <para>!!! Any time you connect to the stream, you receive the latest active funding rate</para>
+    /// </summary>
+    public readonly Subject<FundingResponse> FundingStream = new();
+        
+    // PRIVATE
 
-        /// <summary>
-        /// Order book stream - emits every update in the order book
-        /// </summary>
-        public IObservable<BookResponse> BookStream => BookSubject.AsObservable();
+    /// <summary>
+    /// Authentication info stream, emits status after sending authentication request
+    /// </summary>
+    public readonly Subject<AuthenticationResponse> AuthenticationStream = new();
 
-        /// <summary>
-        /// Order book stream - emits every update in the order book
-        /// </summary>
-        public IObservable<BookResponse> Book25Stream => Book25Subject.AsObservable();
+    /// <summary>
+    /// Stream for every wallet balance update
+    /// </summary>
+    public readonly Subject<WalletResponse> WalletStream = new();
 
-        /// <summary>
-        /// Quotes stream - emits on every change of top level of order book
-        /// </summary>
-        public IObservable<QuoteResponse> QuoteStream => QuoteSubject.AsObservable();
+    /// <summary>
+    /// Stream of all your active orders
+    /// </summary>
+    public readonly Subject<OrderResponse> OrderStream = new();
 
-        /// <summary>
-        /// Liquidation stream - emits message whenever liquidation happens on Bitmex
-        /// </summary>
-        public IObservable<LiquidationResponse> LiquidationStream => LiquidationSubject.AsObservable();
+    /// <summary>
+    /// Stream of all your active positions
+    /// </summary>
+    public readonly Subject<PositionResponse> PositionStream = new();
 
-        /// <summary>
-        /// Stream of all Trade-able Contracts, Indices, and History
-        /// </summary>
-        public IObservable<InstrumentResponse> InstrumentStream => InstrumentSubject.AsObservable();
+    /// <summary>
+    /// Stream of updates on your current account balance and margin requirements
+    /// </summary>
+    public readonly Subject<MarginResponse> MarginStream = new();
 
-        /// <summary>
-        /// Fundings stream - updates of swap funding rates. Sent every funding interval (usually 8hrs) 
-        /// <para>!!! Any time you connect to the stream, you receive the latest active funding rate</para>
-        /// </summary>
-        public IObservable<FundingResponse> FundingStream => FundingsSubject.AsObservable();
+    /// <summary>
+    /// Stream of all raw transactions, which includes order opening and cancellation, and order status changes
+    /// </summary>
+    public readonly Subject<ExecutionResponse> ExecutionStream = new();
 
-
-
-        // PRIVATE
-
-        /// <summary>
-        /// Authentication info stream, emits status after sending authentication request
-        /// </summary>
-        public IObservable<AuthenticationResponse> AuthenticationStream => AuthenticationSubject.AsObservable();
-
-        /// <summary>
-        /// Stream for every wallet balance update
-        /// </summary>
-        public IObservable<WalletResponse> WalletStream => WalletSubject.AsObservable();
-
-        /// <summary>
-        /// Stream of all your active orders
-        /// </summary>
-        public IObservable<OrderResponse> OrderStream => OrderSubject.AsObservable();
-
-        /// <summary>
-        /// Stream of all your active positions
-        /// </summary>
-        public IObservable<PositionResponse> PositionStream => PositionSubject.AsObservable();
-
-        /// <summary>
-        /// Stream of updates on your current account balance and margin requirements
-        /// </summary>
-        public IObservable<MarginResponse> MarginStream => MarginSubject.AsObservable();
-
-        /// <summary>
-        /// Stream of all raw transactions, which includes order opening and cancellation, and order status changes
-        /// </summary>
-        public IObservable<ExecutionResponse> ExecutionStream => ExecutionSubject.AsObservable();
-
-        /// <summary>
-        /// Stream of all raw unhandled messages (that are not yet implemented)
-        /// </summary>
-        public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
-    }
+    /// <summary>
+    /// Stream of all raw unhandled messages (that are not yet implemented)
+    /// </summary>
+    public readonly Subject<string> UnhandledMessageStream = new();
 }
