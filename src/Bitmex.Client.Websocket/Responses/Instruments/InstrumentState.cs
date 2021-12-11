@@ -1,18 +1,17 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Responses.Instruments
+namespace Bitmex.Client.Websocket.Responses.Instruments;
+
+public enum InstrumentState
 {
-    public enum InstrumentState
-    {
-        Undefined,
+    Undefined,
 
-        [DataMember(Name = "open")]
-        Open,
+    [DataMember(Name = "open")]
+    Open,
 
-        [DataMember(Name = "unlisted")]
-        Unlisted,
+    [DataMember(Name = "unlisted")]
+    Unlisted,
 
-        [DataMember(Name = "closed")]
-        Closed
-    }
+    [DataMember(Name = "closed")]
+    Closed
 }

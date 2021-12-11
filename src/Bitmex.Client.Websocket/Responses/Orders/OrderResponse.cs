@@ -2,23 +2,22 @@
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
 
-namespace Bitmex.Client.Websocket.Responses.Orders
+namespace Bitmex.Client.Websocket.Responses.Orders;
+
+public class OrderResponse : ResponseBase
 {
-    public class OrderResponse : ResponseBase
+    public override MessageType Op => MessageType.Order;
+
+    public Order[] Data { get; set; }
+
+    internal static bool TryHandle(string response, ISubject<OrderResponse> subject)
     {
-        public override MessageType Op => MessageType.Order;
+        if (!BitmexJsonSerializer.ContainsValue(response, "order"))
+            return false;
 
-        public Order[] Data { get; set; }
+        var parsed = BitmexJsonSerializer.Deserialize<OrderResponse>(response);
+        subject.OnNext(parsed);
 
-        internal static bool TryHandle(string response, ISubject<OrderResponse> subject)
-        {
-            if (!BitmexJsonSerializer.ContainsValue(response, "order"))
-                return false;
-
-            var parsed = BitmexJsonSerializer.Deserialize<OrderResponse>(response);
-            subject.OnNext(parsed);
-
-            return true;
-        }
+        return true;
     }
 }

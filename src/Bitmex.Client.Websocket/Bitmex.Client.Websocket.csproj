@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5;net6</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <PackageId>Bitmex.Client.Websocket</PackageId>
-    <Version>3.1.0</Version>
+    <Version>4.0.0-beta.2</Version>
     <Authors>Mariusz Kotas</Authors>
     <Description>Client for Bitmex websocket API</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -16,24 +17,17 @@
     <RepositoryUrl>https://github.com/Marfusios/bitmex-client-websocket</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile> 
-    <AssemblyVersion>3.1.0.0</AssemblyVersion>
-    <FileVersion>3.1.0.0</FileVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibLog" Version="5.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
-    <PackageReference Include="Websocket.Client" Version="4.4.40" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Responses\Instruments\" />
+    <PackageReference Include="Websocket.Client" Version="4.4.43" />
   </ItemGroup>
 </Project>

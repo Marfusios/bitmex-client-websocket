@@ -1,24 +1,23 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Responses.Orders
+namespace Bitmex.Client.Websocket.Responses.Orders;
+
+public enum OrderStatus
 {
-    public enum OrderStatus
-    {
-        Undefined,
+    Undefined,
 
-        [DataMember(Name = "new")]
-        New,
+    [DataMember(Name = "new")]
+    New,
 
-        [DataMember(Name = "filled")]
-        Filled,
+    [DataMember(Name = "filled")]
+    Filled,
 
-        [DataMember(Name = "partiallyFilled")]
-        PartiallyFilled,
+    [DataMember(Name = "partiallyFilled")]
+    PartiallyFilled,
 
-        [DataMember(Name = "canceled")]
-        Canceled,
+    [DataMember(Name = "canceled")]
+    Canceled,
 
-        [DataMember(Name = "rejected")]
-        Rejected
-    }
+    [DataMember(Name = "rejected")]
+    Rejected
 }

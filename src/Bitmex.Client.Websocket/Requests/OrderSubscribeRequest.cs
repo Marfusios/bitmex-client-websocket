@@ -1,10 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Requests
+namespace Bitmex.Client.Websocket.Requests;
+
+public class OrderSubscribeRequest : SubscribeRequestBase
 {
-    public class OrderSubscribeRequest : SubscribeRequestBase
-    {
-        [IgnoreDataMember]
-        public override string Topic => "order";
-    }
+    [IgnoreDataMember]
+    public override string Topic => "order";
 }

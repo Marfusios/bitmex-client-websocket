@@ -2,79 +2,68 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Client;
-using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
-using Bitmex.Client.Websocket.Websockets;
+using Microsoft.Extensions.Logging.Abstractions;
+using Websocket.Client;
 using Xunit;
 
-namespace Bitmex.Client.Websocket.Tests.Integration
+namespace Bitmex.Client.Websocket.Tests.Integration;
+
+public class BitmexWebsocketClientTests
 {
-    public class BitmexWebsocketClientTests
+    static readonly string API_KEY = "your_api_key";
+    static readonly string API_SECRET = "";
+
+    [Fact]
+    public async Task PingPong()
     {
-        private static readonly string API_KEY = "your_api_key";
-        private static readonly string API_SECRET = "";
+        var url = BitmexValues.ApiWebsocketUrl;
+        using var apiClient = new WebsocketClient(url);
+        PongResponse received = null;
+        var receivedEvent = new ManualResetEvent(false);
 
-        [Fact]
-        public async Task PingPong()
+        using var client = new BitmexWebsocketClient(NullLogger.Instance, apiClient);
+        client.Streams.PongStream.Subscribe(pong =>
         {
-            var url = BitmexValues.ApiWebsocketUrl;
-            using (var communicator = new BitmexWebsocketCommunicator(url))
-            {
-                PongResponse received = null;
-                var receivedEvent = new ManualResetEvent(false);
+            received = pong;
+            receivedEvent.Set();
+        });
 
-                using (var client = new BitmexWebsocketClient(communicator))
-                {
+        await apiClient.Start();
 
-                    client.Streams.PongStream.Subscribe(pong =>
-                    {
-                        received = pong;
-                        receivedEvent.Set();
-                    });
+        client.Send(new PingRequest());
 
-                    await communicator.Start();
+        receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
-                    client.Send(new PingRequest());
-
-                    receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
-
-                    Assert.NotNull(received);
-                }
-            }
-        }
-
-        [SkippableFact]
-        public async Task Authentication()
-        {
-            Skip.If(string.IsNullOrWhiteSpace(API_SECRET));
-
-            var url = BitmexValues.ApiWebsocketUrl;
-            using (var communicator = new BitmexWebsocketCommunicator(url))
-            {
-                AuthenticationResponse received = null;
-                var receivedEvent = new ManualResetEvent(false);
-
-                using (var client = new BitmexWebsocketClient(communicator))
-                {
-
-                    client.Streams.AuthenticationStream.Subscribe(auth =>
-                    {
-                        received = auth;
-                        receivedEvent.Set();
-                    });
-
-                    await communicator.Start();
-
-                    client.Authenticate(API_KEY, API_SECRET);
-
-                    receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
-
-                    Assert.NotNull(received);
-                    Assert.True(received.Success);
-                }
-            }
-        }
-
+        Assert.NotNull(received);
     }
+
+    [SkippableFact]
+    public async Task Authentication()
+    {
+        Skip.If(string.IsNullOrWhiteSpace(API_SECRET));
+
+        var url = BitmexValues.ApiWebsocketUrl;
+        using var apiClient = new WebsocketClient(url);
+        AuthenticationResponse received = null;
+        var receivedEvent = new ManualResetEvent(false);
+
+        using var client = new BitmexWebsocketClient(NullLogger.Instance, apiClient);
+        client.Streams.AuthenticationStream.Subscribe(auth =>
+        {
+            received = auth;
+            receivedEvent.Set();
+        });
+
+        await apiClient.Start();
+
+        client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+
+        receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
+
+        Assert.NotNull(received);
+        Assert.True(received.Success);
+    }
+
 }

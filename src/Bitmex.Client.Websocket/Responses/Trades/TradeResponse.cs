@@ -2,33 +2,32 @@
 using Bitmex.Client.Websocket.Json;
 using Bitmex.Client.Websocket.Messages;
 
-namespace Bitmex.Client.Websocket.Responses.Trades
+namespace Bitmex.Client.Websocket.Responses.Trades;
+
+/// <summary>
+/// Trades response
+/// </summary>
+public class TradeResponse : ResponseBase
 {
     /// <summary>
-    /// Trades response
+    /// Operation type
     /// </summary>
-    public class TradeResponse : ResponseBase
+    public override MessageType Op => MessageType.Trade;
+
+    /// <summary>
+    /// All latest trades
+    /// </summary>
+    public Trade[] Data { get; set; }
+
+
+    internal static bool TryHandle(string response, ISubject<TradeResponse> subject)
     {
-        /// <summary>
-        /// Operation type
-        /// </summary>
-        public override MessageType Op => MessageType.Trade;
+        if (!BitmexJsonSerializer.ContainsValue(response, "trade"))
+            return false;
 
-        /// <summary>
-        /// All latest trades
-        /// </summary>
-        public Trade[] Data { get; set; }
+        var parsed = BitmexJsonSerializer.Deserialize<TradeResponse>(response);
+        subject.OnNext(parsed);
 
-
-        internal static bool TryHandle(string response, ISubject<TradeResponse> subject)
-        {
-            if (!BitmexJsonSerializer.ContainsValue(response, "trade"))
-                return false;
-
-            var parsed = BitmexJsonSerializer.Deserialize<TradeResponse>(response);
-            subject.OnNext(parsed);
-
-            return true;
-        }
+        return true;
     }
 }

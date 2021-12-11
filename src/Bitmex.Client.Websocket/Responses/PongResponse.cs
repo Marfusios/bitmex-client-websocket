@@ -1,25 +1,24 @@
 ﻿using System.Reactive.Subjects;
 using Bitmex.Client.Websocket.Messages;
 
-namespace Bitmex.Client.Websocket.Responses
+namespace Bitmex.Client.Websocket.Responses;
+
+public class PongResponse : MessageBase
 {
-    public class PongResponse : MessageBase
+    public override MessageType Op => MessageType.Ping;
+
+    public string Message { get; set; }
+
+    internal static bool TryHandle(string response, ISubject<PongResponse> subject)
     {
-        public override MessageType Op => MessageType.Ping;
+        if (response == null)
+            return false;
 
-        public string Message { get; set; }
+        if (!response.ToLower().Contains("pong"))
+            return false;
 
-        internal static bool TryHandle(string response, ISubject<PongResponse> subject)
-        {
-            if (response == null)
-                return false;
-
-            if (!response.ToLower().Contains("pong"))
-                return false;
-
-            var parsed = new PongResponse {Message = response};
-            subject.OnNext(parsed);
-            return true;
-        }
+        var parsed = new PongResponse {Message = response};
+        subject.OnNext(parsed);
+        return true;
     }
 }

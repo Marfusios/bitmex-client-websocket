@@ -1,16 +1,15 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Responses
+namespace Bitmex.Client.Websocket.Responses;
+
+public enum BitmexSide
 {
-    public enum BitmexSide
-    {
-        [DataMember(Name = "")]
-        Undefined,
+    [DataMember(Name = "")]
+    Undefined,
 
-        [DataMember(Name = "buy")]
-        Buy,
+    [DataMember(Name = "buy")]
+    Buy,
 
-        [DataMember(Name = "sell")]
-        Sell
-    }
+    [DataMember(Name = "sell")]
+    Sell
 }

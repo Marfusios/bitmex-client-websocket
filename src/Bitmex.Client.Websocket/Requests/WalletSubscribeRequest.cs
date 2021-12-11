@@ -1,10 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Requests
+namespace Bitmex.Client.Websocket.Requests;
+
+public class WalletSubscribeRequest : SubscribeRequestBase
 {
-    public class WalletSubscribeRequest : SubscribeRequestBase
-    {
-        [IgnoreDataMember]
-        public override string Topic => "wallet";
-    }
+    [IgnoreDataMember]
+    public override string Topic => "wallet";
 }

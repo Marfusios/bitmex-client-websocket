@@ -1,21 +1,20 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Responses
+namespace Bitmex.Client.Websocket.Responses;
+
+public enum BitmexAction
 {
-    public enum BitmexAction
-    {
-        Undefined,
+    Undefined,
 
-        [DataMember(Name = "partial")]
-        Partial,
+    [DataMember(Name = "partial")]
+    Partial,
 
-        [DataMember(Name = "insert")]
-        Insert,
+    [DataMember(Name = "insert")]
+    Insert,
 
-        [DataMember(Name = "update")]
-        Update,
+    [DataMember(Name = "update")]
+    Update,
 
-        [DataMember(Name = "delete")]
-        Delete
-    }
+    [DataMember(Name = "delete")]
+    Delete
 }

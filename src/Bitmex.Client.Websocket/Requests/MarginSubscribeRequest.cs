@@ -1,10 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Bitmex.Client.Websocket.Requests
+namespace Bitmex.Client.Websocket.Requests;
+
+public class MarginSubscribeRequest : SubscribeRequestBase
 {
-    public class MarginSubscribeRequest : SubscribeRequestBase
-    {
-        [IgnoreDataMember]
-        public override string Topic => "margin";
-    }
+    [IgnoreDataMember]
+    public override string Topic => "margin";
 }
