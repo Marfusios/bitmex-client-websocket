@@ -55,6 +55,11 @@ namespace Bitmex.Client.Websocket.Client
         public BitmexClientStreams Streams { get; } = new BitmexClientStreams();
 
         /// <summary>
+        /// Expose logger for this client
+        /// </summary>
+        public ILogger<BitmexWebsocketClient> Logger => _logger;
+
+        /// <summary>
         /// Cleanup everything
         /// </summary>
         public void Dispose()
