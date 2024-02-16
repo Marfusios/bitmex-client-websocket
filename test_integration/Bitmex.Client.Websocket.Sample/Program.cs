@@ -8,21 +8,23 @@ using System.Threading.Tasks;
 using Bitmex.Client.Websocket.Client;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Websockets;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
 
 namespace Bitmex.Client.Websocket.Sample
 {
     class Program
     {
-        private static readonly ManualResetEvent ExitEvent = new ManualResetEvent(false);
+        private static readonly ManualResetEvent _exitEvent = new(false);
 
-        private static readonly string API_KEY = "your_api_key";
-        private static readonly string API_SECRET = "";
+        private const string ApiKey = "your_api_key";
+        private const string ApiSecret = "";
 
         static void Main(string[] args)
         {
-            InitLogging();
+            var logger = InitLogging();
 
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainOnProcessExit;
             AssemblyLoadContext.Default.Unloading += DefaultOnUnloading;
@@ -36,25 +38,25 @@ namespace Bitmex.Client.Websocket.Sample
             Log.Debug("====================================");
             Log.Debug("              STARTING              ");
             Log.Debug("====================================");
-           
+
 
 
             var url = BitmexValues.ApiWebsocketUrl;
-            using (var communicator = new BitmexWebsocketCommunicator(url))
+            using (var communicator = new BitmexWebsocketCommunicator(url, logger.CreateLogger<BitmexWebsocketCommunicator>()))
             {
                 communicator.Name = "Bitmex-1";
                 communicator.ReconnectTimeout = TimeSpan.FromMinutes(10);
                 communicator.ReconnectionHappened.Subscribe(type =>
-                    Log.Information($"Reconnection happened, type: {type.Type}"));
+                    Log.Information("Reconnection happened, type: {type}", type.Type));
 
-                using (var client = new BitmexWebsocketClient(communicator))
+                using (var client = new BitmexWebsocketClient(communicator, logger.CreateLogger<BitmexWebsocketClient>()))
                 {
 
                     client.Streams.InfoStream.Subscribe(info =>
                     {
-                        Log.Information($"Reconnection happened, Message: {info.Info}, Version: {info.Version:D}");
+                        Log.Information("Reconnection happened, Message: {info}, Version: {version}", info.Info, info.Version);
                         SendSubscriptionRequests(client);
-                    });   
+                    });
 
                     SubscribeToStreams(client);
 
@@ -62,7 +64,7 @@ namespace Bitmex.Client.Websocket.Sample
 
                     _ = StartPinging(client);
 
-                    ExitEvent.WaitOne();
+                    _exitEvent.WaitOne();
                 }
             }
 
@@ -92,14 +94,14 @@ namespace Bitmex.Client.Websocket.Sample
             //client.Send(new Book25SubscribeRequest("XBTUSD"));
             //client.Send(new Book10SubscribeRequest("XBTUSD"));
 
-            if (!string.IsNullOrWhiteSpace(API_SECRET))
-                client.Send(new AuthenticationRequest(API_KEY, API_SECRET));
+            if (!string.IsNullOrWhiteSpace(ApiSecret))
+                client.Send(new AuthenticationRequest(ApiKey, ApiSecret));
         }
 
         private static void SubscribeToStreams(BitmexWebsocketClient client)
         {
             client.Streams.ErrorStream.Subscribe(x =>
-                Log.Warning($"Error received, message: {x.Error}, status: {x.Status}"));
+                Log.Warning("Error received, message: {error}, status: {status}", x.Error, x.Status));
 
             client.Streams.AuthenticationStream.Subscribe(x =>
             {
@@ -205,34 +207,36 @@ namespace Bitmex.Client.Websocket.Sample
             //});
         }
 
-        private static void InitLogging()
+        private static SerilogLoggerFactory InitLogging()
         {
             var executingDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var logPath = Path.Combine(executingDir, "logs", "verbose.log");
-            Log.Logger = new LoggerConfiguration()
+            var logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.ColoredConsole(LogEventLevel.Information)
+                .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
+            Log.Logger = logger;
+            return new SerilogLoggerFactory(logger);
         }
 
         private static void CurrentDomainOnProcessExit(object sender, EventArgs eventArgs)
         {
             Log.Warning("Exiting process");
-            ExitEvent.Set();
+            _exitEvent.Set();
         }
 
         private static void DefaultOnUnloading(AssemblyLoadContext assemblyLoadContext)
         {
             Log.Warning("Unloading process");
-            ExitEvent.Set();
+            _exitEvent.Set();
         }
 
         private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             Log.Warning("Canceling process");
             e.Cancel = true;
-            ExitEvent.Set();
+            _exitEvent.Set();
         }
     }
 }

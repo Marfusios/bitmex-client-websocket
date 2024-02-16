@@ -1,39 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5;net6</TargetFrameworks>
-    <PackageId>Bitmex.Client.Websocket</PackageId>
-    <Version>3.1.0</Version>
-    <Authors>Mariusz Kotas</Authors>
-    <Description>Client for Bitmex websocket API</Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <Copyright>Copyright 2021 Mariusz Kotas. All rights reserved.</Copyright>
-    <PackageTags>Bitmex websockets websocket client cryptocurrency exchange bitcoin</PackageTags>
-    <PackageLicenseUrl>https://github.com/Marfusios/bitmex-client-websocket/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Marfusios/bitmex-client-websocket</PackageProjectUrl>
-    <PackageIconUrl>https://media.glassdoor.com/sqll/1955459/bitmex-squarelogo-1526028471476.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Marfusios/bitmex-client-websocket</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile> 
-    <AssemblyVersion>3.1.0.0</AssemblyVersion>
-    <FileVersion>3.1.0.0</FileVersion>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;net6;net7;net8</TargetFrameworks>
+		<PackageId>Bitmex.Client.Websocket</PackageId>
+		<Authors>Mariusz Kotas</Authors>
+		<Description>Client for Bitmex websocket API</Description>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageReleaseNotes>Enhancements</PackageReleaseNotes>
+		<Copyright>Copyright 2024 Mariusz Kotas. All rights reserved.</Copyright>
+		<PackageTags>Bitmex websockets websocket client cryptocurrency exchange bitcoin</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/Marfusios/bitmex-client-websocket</PackageProjectUrl>
+		<PackageIconUrl>https://media.glassdoor.com/sqll/1955459/bitmex-squarelogo-1526028471476.png</PackageIconUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/Marfusios/bitmex-client-websocket</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryType>Git</RepositoryType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LibLog" Version="5.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Utf8Json" Version="1.3.7" />
-    <PackageReference Include="Websocket.Client" Version="4.4.40" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Utf8Json" Version="1.3.7" />
+		<PackageReference Include="Websocket.Client" Version="5.1.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Responses\Instruments\" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="icon.png" Pack="true" PackagePath="" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 </Project>

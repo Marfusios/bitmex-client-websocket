@@ -11,7 +11,7 @@ namespace Bitmex.Client.Websocket.Responses
         public override MessageType Op => MessageType.Info;
 
         public string Info { get; set; }
-        public DateTime? Version { get; set; }
+        public string? Version { get; set; }
         public DateTime? Timestamp { get; set; }
         public string Docs { get; set; }
         public Dictionary<string, object> Limit { get; set; }

@@ -1,0 +1,37 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.x
+
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --logger "trx;LogFileName=tests.trx"
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: tests
+        path: '**/*.trx'
+        reporter: dotnet-trx
+    - name: Pack library project
+      run: dotnet pack src/Bitmex.Client.Websocket/Bitmex.Client.Websocket.csproj --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -o .
+    - name: Publish library (NuGet)
+      run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+    #- name: Publish library (Github)
+    #  run: dotnet nuget push *.nupkg --api-key ${{secrets.PUBLISH_TO_GITHUB_TOKEN}} --source "https://nuget.pkg.github.com/marfusios/index.json" --skip-duplicate

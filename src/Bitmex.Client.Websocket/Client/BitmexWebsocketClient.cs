@@ -1,7 +1,6 @@
 ﻿using System;
 using Bitmex.Client.Websocket.Communicator;
 using Bitmex.Client.Websocket.Json;
-using Bitmex.Client.Websocket.Logging;
 using Bitmex.Client.Websocket.Requests;
 using Bitmex.Client.Websocket.Responses;
 using Bitmex.Client.Websocket.Responses.Books;
@@ -20,6 +19,8 @@ using Bitmex.Client.Websocket.Responses.Executions;
 using Bitmex.Client.Websocket.Responses.Fundings;
 using Utf8Json;
 using Utf8Json.Resolvers;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Bitmex.Client.Websocket.Client
 {
@@ -30,17 +31,19 @@ namespace Bitmex.Client.Websocket.Client
     /// </summary>
     public class BitmexWebsocketClient : IDisposable
     {
-        private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
-
         private readonly IBitmexCommunicator _communicator;
         private readonly IDisposable _messageReceivedSubscription;
+        private readonly ILogger<BitmexWebsocketClient> _logger;
 
-        /// <inheritdoc />
-        public BitmexWebsocketClient(IBitmexCommunicator communicator)
+        /// <summary>
+        /// Creates an instance of BitmexWebsocketClient
+        /// </summary>
+        public BitmexWebsocketClient(IBitmexCommunicator communicator, ILogger<BitmexWebsocketClient>? logger = null)
         {
             BmxValidations.ValidateInput(communicator, nameof(communicator));
 
             _communicator = communicator;
+            _logger = logger ?? NullLogger<BitmexWebsocketClient>.Instance;
             _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
 
             JsonSerializer.SetDefaultResolver(StandardResolver.CamelCase);
@@ -64,20 +67,20 @@ namespace Bitmex.Client.Websocket.Client
         /// It logs and re-throws every exception. 
         /// </summary>
         /// <param name="request">Request/message to be sent</param>
-        public void Send<T>(T request) where T: RequestBase
+        public void Send<T>(T request) where T : RequestBase
         {
             try
             {
                 BmxValidations.ValidateInput(request, nameof(request));
 
-                var serialized = request.IsRaw ? 
+                var serialized = request.IsRaw ?
                     request.OperationString :
                     BitmexJsonSerializer.Serialize(request);
                 _communicator.Send(serialized);
             }
             catch (Exception e)
             {
-                Log.Error(e, L($"Exception while sending message '{request}'. Error: {e.Message}"));
+                _logger.LogError(e, L("Exception while sending message '{request}'. Error: {error}"), request, e.Message);
                 throw;
             }
         }
@@ -115,13 +118,13 @@ namespace Bitmex.Client.Websocket.Client
                 if (handled)
                     return;
 
-                if(!string.IsNullOrWhiteSpace(messageSafe))
+                if (!string.IsNullOrWhiteSpace(messageSafe))
                     Streams.UnhandledMessageSubject.OnNext(messageSafe);
-                Log.Warn(L($"Unhandled response:  '{messageSafe}'"));
+                _logger.LogWarning(L("Unhandled response:  '{message}'"), messageSafe);
             }
             catch (Exception e)
             {
-                Log.Error(e, L("Exception while receiving message"));
+                _logger.LogError(e, L("Exception while receiving message, error: {error}"), e.Message);
             }
         }
 

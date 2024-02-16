@@ -59,23 +59,23 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public DateTimeOffset? PublishTime { get; set; }
 
-        public long? MaxOrderQty { get; set; }
+        public double? MaxOrderQty { get; set; }
 
-        public long? MaxPrice { get; set; }
+        public double? MaxPrice { get; set; }
 
-        public long? LotSize { get; set; }
+        public double? LotSize { get; set; }
 
         public double TickSize { get; set; }
 
-        public long? Multiplier { get; set; }
+        public double? Multiplier { get; set; }
 
         public string SettlementCurrency { get; set; }
 
-        public long? UnderlyingToPositionMultiplier { get; set; }
+        public double? UnderlyingToPositionMultiplier { get; set; }
 
-        public long? UnderlyingToSettleMultiplier { get; set; }
+        public double? UnderlyingToSettleMultiplier { get; set; }
 
-        public long? QuoteToSettleMultiplier { get; set; }
+        public double? QuoteToSettleMultiplier { get; set; }
 
         public bool IsQuanto { get; set; }
 
@@ -85,9 +85,9 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public double? MaintenanceMargin { get; set; }
 
-        public long? RiskLimit { get; set; }
+        public double? RiskLimit { get; set; }
 
-        public long? RiskStep { get; set; }
+        public double? RiskStep { get; set; }
 
         public double? Limit { get; set; }
 
@@ -101,9 +101,9 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public double? TakerFee { get; set; }
 
-        public long? SettlementFee { get; set; }
+        public double? SettlementFee { get; set; }
 
-        public long? InsuranceFee { get; set; }
+        public double? InsuranceFee { get; set; }
 
         public string FundingBaseSymbol { get; set; }
 
@@ -139,23 +139,23 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public double? BankruptLimitUpPrice { get; set; }
 
-        public long? PrevTotalVolume { get; set; }
+        public double? PrevTotalVolume { get; set; }
 
-        public long? TotalVolume { get; set; }
+        public double? TotalVolume { get; set; }
 
-        public long? Volume { get; set; }
+        public double? Volume { get; set; }
 
-        public long? Volume24H { get; set; }
+        public double? Volume24H { get; set; }
 
-        public long? PrevTotalTurnover { get; set; }
+        public double? PrevTotalTurnover { get; set; }
 
-        public long? TotalTurnover { get; set; }
+        public double? TotalTurnover { get; set; }
 
-        public long? Turnover { get; set; }
+        public double? Turnover { get; set; }
 
-        public long? Turnover24H { get; set; }
+        public double? Turnover24H { get; set; }
 
-        public long? HomeNotional24H { get; set; }
+        public double? HomeNotional24H { get; set; }
 
         public double? ForeignNotional24H { get; set; }
 
@@ -189,9 +189,9 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public bool HasLiquidity { get; set; }
 
-        public long? OpenInterest { get; set; }
+        public double? OpenInterest { get; set; }
 
-        public long OpenValue { get; set; }
+        public double OpenValue { get; set; }
 
         public InstrumentFairMethod FairMethod { get; set; }
 
@@ -205,7 +205,7 @@ namespace Bitmex.Client.Websocket.Responses.Instruments
 
         public double MarkPrice { get; set; }
 
-        public long? IndicativeTaxRate { get; set; }
+        public double? IndicativeTaxRate { get; set; }
 
         public double? IndicativeSettlePrice { get; set; }
 

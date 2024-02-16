@@ -5,7 +5,6 @@ namespace Bitmex.Client.Websocket.Utils
 {
     public static class BitmexAuthentication
     {
-
         public static long CreateAuthNonce(long? time = null)
         {
             var timeSafe = time ?? BitmexTime.NowMs();
@@ -34,11 +33,9 @@ namespace Bitmex.Client.Websocket.Utils
                 return builder.ToString();
             }
 
-            using (var hmacsha256 = new HMACSHA256(keyBytes))
-            {
-                byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
-                return ByteToString(hashmessage).ToLower();
-            }
+            using var hmacSha256 = new HMACSHA256(keyBytes);
+            byte[] hashMessage = hmacSha256.ComputeHash(messageBytes);
+            return ByteToString(hashMessage).ToLower();
         }
     }
 }
