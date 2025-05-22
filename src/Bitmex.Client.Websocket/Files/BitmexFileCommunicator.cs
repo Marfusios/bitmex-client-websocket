@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
@@ -29,6 +30,7 @@ namespace Bitmex.Client.Websocket.Files
         public bool IsRunning { get; private set; }
         public bool IsReconnectionEnabled { get; set; }
         public bool IsTextMessageConversionEnabled { get; set; }
+        public bool IsStreamDisposedAutomatically { get; set; }
         public ClientWebSocket NativeClient { get; }
         public Encoding MessageEncoding { get; set; }
 
@@ -78,6 +80,11 @@ namespace Bitmex.Client.Websocket.Files
             return true;
         }
 
+        public bool Send(ReadOnlySequence<byte> message)
+        {
+            return true;
+        }
+
         public virtual Task SendInstant(string message)
         {
             return Task.CompletedTask;
@@ -98,6 +105,11 @@ namespace Bitmex.Client.Websocket.Files
             return true;
         }
 
+        public bool SendAsText(ReadOnlySequence<byte> message)
+        {
+            return true;
+        }
+
         public Task Reconnect()
         {
             return Task.CompletedTask;
@@ -105,12 +117,11 @@ namespace Bitmex.Client.Websocket.Files
 
         public Task ReconnectOrFail()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public void StreamFakeMessage(ResponseMessage message)
         {
-            throw new NotImplementedException();
         }
 
         public Uri Url { get; set; }

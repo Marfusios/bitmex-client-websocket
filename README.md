@@ -1,5 +1,10 @@
 ![Logo](bitmex-logo-alt.png)
-# Bitmex websocket API client [![Build Status](https://travis-ci.org/Marfusios/bitmex-client-websocket.svg?branch=master)](https://travis-ci.org/Marfusios/bitmex-client-websocket) [![NuGet version](https://badge.fury.io/nu/Bitmex.Client.Websocket.svg)](https://badge.fury.io/nu/Bitmex.Client.Websocket) [![Nuget download](https://img.shields.io/nuget/dt/Bitmex.Client.Websocket)](https://www.nuget.org/packages/Bitmex.Client.Websocket)
+# Bitmex websocket API client 
+
+[![NuGet version](https://img.shields.io/nuget/v/Bitmex.Client.Websocket?style=flat-square)](https://www.nuget.org/packages/Bitmex.Client.Websocket)
+[![Nuget downloads](https://img.shields.io/nuget/dt/Bitmex.Client.Websocket?style=flat-square)](https://www.nuget.org/packages/Bitmex.Client.Websocket)
+[![CI build](https://img.shields.io/github/check-runs/marfusios/bitmex-client-websocket/master?style=flat-square&label=build)](https://github.com/Marfusios/bitmex-client-websocket/actions/workflows/dotnet-core.yml)
+
 
 This is a C# implementation of the Bitmex websocket API found here:
 
