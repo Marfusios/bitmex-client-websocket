@@ -21,6 +21,7 @@ namespace Bitmex.Client.Websocket.Files
         public IObservable<ResponseMessage> MessageReceived => _messageReceivedSubject.AsObservable();
         public IObservable<ReconnectionInfo> ReconnectionHappened => Observable.Empty<ReconnectionInfo>();
         public IObservable<DisconnectionInfo> DisconnectionHappened => Observable.Empty<DisconnectionInfo>();
+        public TimeSpan ConnectTimeout { get; set; }
 
         public TimeSpan? ReconnectTimeout { get; set; } = TimeSpan.FromSeconds(60);
         public TimeSpan? ErrorReconnectTimeout { get; set; } = TimeSpan.FromSeconds(60);
@@ -28,6 +29,9 @@ namespace Bitmex.Client.Websocket.Files
         public string Name { get; set; }
         public bool IsStarted { get; private set; }
         public bool IsRunning { get; private set; }
+        public bool TextSenderRunning { get; set; }
+        public bool BinarySenderRunning { get; set; }
+        public bool IsInsideLock { get; set; }
         public bool IsReconnectionEnabled { get; set; }
         public bool IsTextMessageConversionEnabled { get; set; }
         public bool IsStreamDisposedAutomatically { get; set; }

@@ -7,9 +7,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Bitmex.Client.Websocket\Bitmex.Client.Websocket.csproj" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
 	</ItemGroup>
 
 </Project>
