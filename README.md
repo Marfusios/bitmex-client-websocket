@@ -19,7 +19,8 @@ https://www.bitmex.com/app/wsAPI
 
 * installation via NuGet ([Bitmex.Client.Websocket](https://www.nuget.org/packages/Bitmex.Client.Websocket))
 * public and authenticated API
-* targeting .NET Standard 2.0 (.NET Core, Linux/MacOS compatible)
+* targets `netstandard2.1`, `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`
+* built on [Websocket.Client 5.4.0](https://www.nuget.org/packages/Websocket.Client/5.4.0) for websocket transport, reconnects, and lower-allocation message handling
 * reactive extensions ([Rx.NET](https://github.com/Reactive-Extensions/Rx.NET))
 * integrated logging abstraction ([LibLog](https://github.com/damianh/LibLog))
 
