@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using Bitmex.Client.Websocket.Sample.WinForms.Presenters;
 using Bitmex.Client.Websocket.Sample.WinForms.Views;
 using Serilog;
-using Serilog.Events;
 
 namespace Bitmex.Client.Websocket.Sample.WinForms
 {
@@ -37,8 +36,6 @@ namespace Bitmex.Client.Websocket.Sample.WinForms
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                //.WriteTo.Console(LogEventLevel.Information)
-                .WriteTo.Debug(LogEventLevel.Debug)
                 .CreateLogger();
         }
     }

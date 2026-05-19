@@ -3,7 +3,7 @@
 	<!-- Project defaults -->
 
 	<PropertyGroup>
-		<Version>3.4.0</Version>
+		<Version>3.5.0</Version>
 	</PropertyGroup>
 
 </Project>

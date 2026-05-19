@@ -25,7 +25,7 @@ namespace Bitmex.Client.Websocket.Requests
         /// Operation as string for Raw requests (for example: ping)
         /// </summary>
         [IgnoreDataMember]
-        public virtual string OperationString => Operation.ToString().ToLower();
+        public virtual string OperationString => Operation.ToString().ToLowerInvariant();
 
         /// <summary>
         /// If is set to true, whole request is not serialized as JSON but only 'OperationString' is used

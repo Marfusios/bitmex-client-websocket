@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Subjects;
+using System;
 using Bitmex.Client.Websocket.Messages;
 
 namespace Bitmex.Client.Websocket.Responses
@@ -14,7 +15,7 @@ namespace Bitmex.Client.Websocket.Responses
             if (response == null)
                 return false;
 
-            if (!response.ToLower().Contains("pong"))
+            if (response.IndexOf("pong", StringComparison.OrdinalIgnoreCase) < 0)
                 return false;
 
             var parsed = new PongResponse {Message = response};

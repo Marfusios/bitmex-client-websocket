@@ -79,7 +79,7 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
                             $"Book | {book.Action} pair: {x.Symbol}, price: {x.Price}, amount {x.Size}, side: {x.Side}"))
                     );
 
-                    communicator.Start();
+                    communicator.Start().Wait();
                     
                     ExitEvent.WaitOne();
                 }
@@ -98,7 +98,7 @@ namespace Bitmex.Client.Websocket.Sample.NetFramework
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-                .WriteTo.ColoredConsole(LogEventLevel.Debug)
+                .WriteTo.Console(LogEventLevel.Debug)
                 .CreateLogger();
         }
 

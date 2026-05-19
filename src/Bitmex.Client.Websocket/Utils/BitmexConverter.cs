@@ -25,7 +25,9 @@ namespace Bitmex.Client.Websocket.Utils
                 return ConvertFromSatoshiToBtc(value);
             }
 
-            if (string.IsNullOrWhiteSpace(safe) || safe.ToLower() == "btc" || safe.ToLower() == "xbt")
+            if (string.IsNullOrWhiteSpace(safe)
+                || safe.Equals("btc", StringComparison.OrdinalIgnoreCase)
+                || safe.Equals("xbt", StringComparison.OrdinalIgnoreCase))
                 return value;
 
             throw new BitmexException($"Can't convert from '{safe}' to BTC (double)");
@@ -48,7 +50,9 @@ namespace Bitmex.Client.Websocket.Utils
                 return ConvertFromSatoshiToBtcDecimal(value);
             }
 
-            if (string.IsNullOrWhiteSpace(safe) || safe.ToLower() == "btc" || safe.ToLower() == "xbt")
+            if (string.IsNullOrWhiteSpace(safe)
+                || safe.Equals("btc", StringComparison.OrdinalIgnoreCase)
+                || safe.Equals("xbt", StringComparison.OrdinalIgnoreCase))
                 return value;
 
             throw new BitmexException($"Can't convert from '{safe}' to BTC (decimal)");
